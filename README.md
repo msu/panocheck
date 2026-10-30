@@ -8,6 +8,7 @@ Document accessibility checker and fixer for HTML, DOCX, PPTX, XLSX and PDF.
 ## Layout
 
 ```
+src/md/       specification and design, start at src/md/README.md
 src/spec/     check IDs, severities, thresholds, messages
 src/python/   single-file library and CLI, plus tests
 src/web/      Vite + Preact app for GitHub Pages
@@ -41,6 +42,8 @@ To vendor, copy `panocheck.py` and install the packages for your formats:
 Legacy and ODF files need LibreOffice on the path.
 
 ## Develop
+
+Change `src/md` first, then derive code and tests from it.
 
 ```
 cd src/python && uv venv && uv pip install -e '.[dev]' && .venv/bin/pytest
