@@ -16,5 +16,9 @@ for (const [out, contents] of Object.entries(bundles)) {
     platform: 'browser', outfile: `site/vendor/${out}.js`, logLevel: 'error',
   })
 }
+copyFileSync('node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2', 'site/fonts/inter-latin.woff2')
+copyFileSync('node_modules/@fontsource-variable/inter/LICENSE', 'site/fonts/inter-LICENSE.txt')
+copyFileSync('node_modules/@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2', 'site/fonts/outfit-latin.woff2')
+copyFileSync('node_modules/@fontsource-variable/outfit/LICENSE', 'site/fonts/outfit-LICENSE.txt')
 copyFileSync('node_modules/pdfjs-dist/legacy/build/pdf.min.mjs', 'site/vendor/pdf.js')
 copyFileSync('node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs', 'site/vendor/pdf.worker.js')

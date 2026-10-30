@@ -2,7 +2,7 @@
 
 ## Branding
 
-The header shows the logo (`public/panocheck.svg`) and the name Panocheck. It does not name the university or the school. The MSU blue and gold colors stay.
+The header shows the logo (`public/panocheck.svg`) and the name Panocheck. It does not name the university or the school. The MSU blue and gold colors stay. The site hosts its own copies of the Outfit (title) and Inter (body) fonts, because the CSP blocks font services and a font request would leave the page.
 
 ## Plain HTML and JavaScript
 
