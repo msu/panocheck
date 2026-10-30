@@ -11,7 +11,7 @@ Document accessibility checker and fixer for HTML, DOCX, PPTX, XLSX and PDF.
 src/md/       intent and design decisions, start at src/md/README.md
 src/spec/     check IDs, severities, thresholds, messages
 src/python/   single-file library and CLI, plus tests
-src/web/      Vite + Preact app for GitHub Pages
+src/web/      plain HTML and JavaScript for GitHub Pages (src/web/site)
 src/tools/    fixture generator, spec sync
 fixtures/     generated test documents and expected.json
 ```
@@ -47,10 +47,12 @@ Change `src/md` first, then derive code and tests from it.
 
 ```
 cd src/python && uv venv && uv pip install -e '.[dev]' && .venv/bin/pytest
-cd src/web && npm ci && npm test && npm run build && npx playwright test
+cd src/web && npm ci && npm test && npx playwright test
+cd src/web && npm run serve    # http://localhost:5173/
 ```
 
 After you edit `src/spec/checks.yaml`, run `src/tools/sync_spec.py`.
+After you update a web library, run `npm run vendor` in `src/web`.
 After you edit `src/tools/gen_fixtures.py`, run it again to rebuild `fixtures/`.
 
 ## Limits

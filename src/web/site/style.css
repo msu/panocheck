@@ -3,6 +3,7 @@
   --severe: #a4161a; --major: #8a4b00; --minor: #33506b;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
 .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
 .skip { position: absolute; left: -999px; background: #fff; padding: 8px; }
@@ -11,12 +12,10 @@ a { color: var(--blue); }
 :focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
 .bar { background: var(--blue); border-bottom: 4px solid var(--gold); padding: 12px 0; }
 .bar :focus-visible { outline-color: var(--gold); }
-.dept { color: #fff; font-weight: 700; text-decoration: none; }
-.dept span { display: inline-block; margin-left: 10px; padding-left: 10px; border-left: 1px solid #ffffff80; font-weight: 400; }
-h1 { color: var(--blue); margin: 28px 0 4px; font-size: 2rem; }
+.brand { display: flex; align-items: center; gap: 10px; margin: 0; color: #fff; font-size: 1.5rem; line-height: 1; }
 h2 { color: var(--blue); font-size: 1.25rem; margin: 0 0 8px; }
 h3 { font-size: 1rem; margin: 20px 0 8px; }
-.lead { font-size: 1.1rem; margin: 0 0 8px; }
+.lead { font-size: 1.1rem; margin: 28px 0 8px; }
 .privacy { margin: 0 0 20px; color: var(--muted); }
 .drop { display: block; border: 2px dashed var(--blue); border-radius: 6px; padding: 28px 16px; text-align: center; cursor: pointer; background: var(--tint); }
 .drop.over { background: #fff6cf; }

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; worker-src 'self'; frame-src 'self' about:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panocheck: document accessibility checker</title>
+  <meta name="description" content="Check and fix the accessibility of a document in your browser. No file leaves your computer.">
+  <link rel="icon" type="image/svg+xml" href="panocheck.svg">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="bar">
+    <div class="wrap">
+      <h1 class="brand"><img src="panocheck.svg" alt="" width="36" height="36">Panocheck</h1>
+    </div>
+  </header>
+  <main id="main" class="wrap">
+    <p class="lead">Check a document for accessibility issues, fix them, and download a corrected copy.</p>
+    <p class="privacy"><strong>Your file stays on your computer.</strong> This page has no server, and its security policy blocks all network requests.</p>
+
+    <label id="drop" class="drop">
+      <span>Drop a file here, or choose a file</span>
+      <small>HTML, DOCX, PPTX, XLSX or PDF</small>
+      <input id="file" type="file" accept=".html,.htm,.docx,.pptx,.xlsx,.pdf">
+    </label>
+
+    <p id="status" role="status" class="status"></p>
+    <p id="error" role="alert" class="error" hidden></p>
+
+    <div id="workspace" class="grid" hidden>
+      <section aria-labelledby="results">
+        <h2 id="results" tabindex="-1"></h2>
+        <p><strong id="score"></strong> <span id="count"></span></p>
+        <p class="hint">The score is an estimate. Use it only to compare versions of a file.</p>
+        <div class="actions">
+          <button id="save">Download fixed copy</button>
+          <button id="report" class="secondary">Download report</button>
+          <button id="undo" class="secondary" disabled>Undo last fix</button>
+        </div>
+        <p id="risks" class="warn" hidden></p>
+        <div id="findings"></div>
+      </section>
+      <section aria-labelledby="preview-h" class="preview">
+        <h2 id="preview-h">Preview</h2>
+        <div id="preview"></div>
+      </section>
+    </div>
+  </main>
+  <footer class="foot">
+    <div class="wrap">
+      <p>Panocheck is open source. <a href="https://github.com/msu/panocheck">Read the code</a>. Automatic checks do not replace a manual review.</p>
+    </div>
+  </footer>
+</body>
+</html>

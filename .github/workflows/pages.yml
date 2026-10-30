@@ -17,9 +17,9 @@ jobs:
         with: {node-version: "22"}
       - run: npm ci
         working-directory: src/web
-      - run: npm test && npm run build
+      - run: npm test
         working-directory: src/web
       - uses: actions/upload-pages-artifact@v3
-        with: {path: src/web/dist}
+        with: {path: src/web/site}
       - id: deploy
         uses: actions/deploy-pages@v4

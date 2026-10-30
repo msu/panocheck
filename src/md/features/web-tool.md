@@ -1,8 +1,20 @@
 # Web Tool
 
+## Branding
+
+The header shows the logo (`public/panocheck.svg`) and the name Panocheck. It does not name the university or the school. The MSU blue and gold colors stay.
+
+## Plain HTML and JavaScript
+
+The site has no framework, no TypeScript and no build. `src/web/site` is what the server sends.
+
+- `npm run vendor` writes the third-party libraries to `site/vendor` as ES modules. These files are checked in, because the browser cannot read `node_modules`.
+- `src/tools/sync_spec.py` writes the spec to `site/engine/spec.js`, because a browser cannot import YAML.
+- npm is for tests and for the vendor step only.
+
 ## Privacy
 
-The CSP has `connect-src 'none'`, so the page cannot send a file anywhere. The landing page states this. HTML previews use an iframe with an empty `sandbox`, so document scripts do not run.
+The CSP in `index.html` has `connect-src 'none'`, so the page cannot send a file anywhere. The landing page states this. HTML previews use an iframe with an empty `sandbox`, so document scripts do not run.
 
 ## Parser Choices
 
@@ -14,7 +26,8 @@ The CSP has `connect-src 'none'`, so the page cannot send a file anywhere. The l
 ## Subtleties
 
 - pdf.js posts its own messages on the app worker. The RPC layer tags its messages and ignores all others.
-- The app must render a fix panel with its initial value in `useState`. An effect that sets the value can erase fast input.
+- `app.js` draws the findings list again on each change, so it must restore the focus by finding key.
+- CSS `display` rules override the `hidden` attribute. `style.css` has a rule that prevents this.
 
 ## Preview Limits
 

@@ -1,13 +1,9 @@
-import pdfWorker from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url'
-import { applyFix, pdfRisks, scan } from './engine'
-import { pdfjs } from './engine/pdf'
+import { applyFix, pdfRisks, scan } from './engine/index.js'
 
-pdfjs.GlobalWorkerOptions.workerSrc = pdfWorker
-
-self.addEventListener('message', async ({ data: { id, op, bytes, name, fix } }: MessageEvent) => {
+self.addEventListener('message', async ({ data: { id, op, bytes, name, fix } }) => {
   if (!op) return
   try {
-    let result: any
+    let result
     if (op === 'fix') {
       const next = await applyFix(bytes, name, fix)
       result = { bytes: next, report: await scan(next, name) }
