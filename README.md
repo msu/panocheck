@@ -63,4 +63,4 @@ After you edit `src/tools/gen_fixtures.py`, run it again to rebuild `fixtures/`.
 
 ## License
 
-MIT
+0BSD

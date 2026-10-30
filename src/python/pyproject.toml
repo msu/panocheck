@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Document accessibility checker and fixer"
 readme = "README.md"
 requires-python = ">=3.11"
-license = "MIT"
+license = "0BSD"
 dependencies = ["lxml>=5", "html5lib>=1.1", "pikepdf>=9", "pymupdf>=1.24"]
 
 [project.optional-dependencies]
