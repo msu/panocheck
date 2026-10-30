@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "panocheck finding",
+  "type": "object",
+  "required": ["check_id", "severity", "format", "locator", "message", "fixable"],
+  "additionalProperties": false,
+  "properties": {
+    "check_id": {"type": "string"},
+    "severity": {"enum": ["severe", "major", "minor"]},
+    "format": {"enum": ["html", "pdf", "docx", "pptx", "xlsx"]},
+    "locator": {"type": "string"},
+    "message": {"type": "string"},
+    "fixable": {"type": "boolean"}
+  }
+}

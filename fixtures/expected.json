@@ -1,0 +1,949 @@
+{
+ "docx/contrast.insufficient/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "contrast.insufficient",
+    "locator": "word/document.xml#(//w:r)[2]",
+    "severity": "major"
+   }
+  ]
+ },
+ "docx/contrast.insufficient/pass-1.docx": {
+  "findings": []
+ },
+ "docx/doc.lang.missing/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "doc.lang.missing",
+    "locator": "word/styles.xml#w:docDefaults",
+    "severity": "major"
+   }
+  ]
+ },
+ "docx/doc.lang.missing/pass-1.docx": {
+  "findings": []
+ },
+ "docx/doc.lang.wrong/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "doc.lang.wrong",
+    "locator": "word/styles.xml#w:docDefaults",
+    "severity": "major"
+   }
+  ]
+ },
+ "docx/doc.lang.wrong/pass-1.docx": {
+  "findings": []
+ },
+ "docx/doc.malformed/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "doc.malformed",
+    "locator": "document",
+    "severity": "severe"
+   }
+  ]
+ },
+ "docx/doc.malformed/pass-1.docx": {
+  "findings": []
+ },
+ "docx/doc.title.missing/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "doc.title.missing",
+    "locator": "docProps/core.xml#dc:title",
+    "severity": "major"
+   }
+  ]
+ },
+ "docx/doc.title.missing/pass-1.docx": {
+  "findings": []
+ },
+ "docx/font.too_small/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "font.too_small",
+    "locator": "word/document.xml#(//w:r)[2]",
+    "severity": "minor"
+   }
+  ]
+ },
+ "docx/font.too_small/pass-1.docx": {
+  "findings": []
+ },
+ "docx/heading.depth/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "heading.depth",
+    "locator": "word/document.xml#(//w:p)[5]",
+    "severity": "minor"
+   }
+  ]
+ },
+ "docx/heading.depth/pass-1.docx": {
+  "findings": []
+ },
+ "docx/heading.nesting/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "heading.nesting",
+    "locator": "word/document.xml#(//w:p)[2]",
+    "severity": "major"
+   }
+  ]
+ },
+ "docx/heading.nesting/pass-1.docx": {
+  "findings": []
+ },
+ "docx/heading.none/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "heading.none",
+    "locator": "word/document.xml#w:body",
+    "severity": "major"
+   }
+  ]
+ },
+ "docx/heading.none/pass-1.docx": {
+  "findings": []
+ },
+ "docx/heading.start/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "heading.start",
+    "locator": "word/document.xml#(//w:p)[1]",
+    "severity": "major"
+   }
+  ]
+ },
+ "docx/heading.start/pass-1.docx": {
+  "findings": []
+ },
+ "docx/img.alt.missing/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "img.alt.missing",
+    "locator": "word/document.xml#(//wp:docPr)[1]",
+    "severity": "severe"
+   }
+  ]
+ },
+ "docx/img.alt.missing/pass-1.docx": {
+  "findings": []
+ },
+ "docx/img.not_inline/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "img.not_inline",
+    "locator": "word/document.xml#(//wp:anchor)[1]",
+    "severity": "minor"
+   }
+  ]
+ },
+ "docx/img.not_inline/pass-1.docx": {
+  "findings": []
+ },
+ "docx/link.text.generic/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "link.text.generic",
+    "locator": "word/document.xml#(//w:hyperlink)[1]",
+    "severity": "major"
+   }
+  ]
+ },
+ "docx/link.text.generic/pass-1.docx": {
+  "findings": []
+ },
+ "docx/list.not_marked/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "list.not_marked",
+    "locator": "word/document.xml#(//w:p)[2]",
+    "severity": "minor"
+   }
+  ]
+ },
+ "docx/list.not_marked/pass-1.docx": {
+  "findings": []
+ },
+ "docx/table.caption.missing/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "table.caption.missing",
+    "locator": "word/document.xml#(//w:tbl)[1]",
+    "severity": "minor"
+   }
+  ]
+ },
+ "docx/table.caption.missing/pass-1.docx": {
+  "findings": []
+ },
+ "docx/table.header.missing/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "table.header.missing",
+    "locator": "word/document.xml#(//w:tbl)[1]",
+    "severity": "major"
+   }
+  ]
+ },
+ "docx/table.header.missing/pass-1.docx": {
+  "findings": []
+ },
+ "docx/text.justified/fail-1.docx": {
+  "findings": [
+   {
+    "check_id": "text.justified",
+    "locator": "word/document.xml#(//w:p)[2]",
+    "severity": "minor"
+   }
+  ]
+ },
+ "docx/text.justified/pass-1.docx": {
+  "findings": []
+ },
+ "html/content.too_long/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "content.too_long",
+    "locator": "html > body",
+    "severity": "minor"
+   }
+  ]
+ },
+ "html/content.too_long/pass-1.html": {
+  "findings": []
+ },
+ "html/contrast.insufficient/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "contrast.insufficient",
+    "locator": "html > body > p:nth-of-type(1)",
+    "severity": "major"
+   }
+  ]
+ },
+ "html/contrast.insufficient/fail-2.html": {
+  "findings": [
+   {
+    "check_id": "contrast.insufficient",
+    "locator": "html > body > div:nth-of-type(1) > p:nth-of-type(1)",
+    "severity": "major"
+   }
+  ]
+ },
+ "html/contrast.insufficient/pass-1.html": {
+  "findings": []
+ },
+ "html/contrast.insufficient/pass-2.html": {
+  "findings": []
+ },
+ "html/font.too_small/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "font.too_small",
+    "locator": "html > body > p:nth-of-type(1)",
+    "severity": "minor"
+   }
+  ]
+ },
+ "html/font.too_small/pass-1.html": {
+  "findings": []
+ },
+ "html/heading.depth/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "heading.depth",
+    "locator": "html > body > h5:nth-of-type(1)",
+    "severity": "minor"
+   }
+  ]
+ },
+ "html/heading.depth/pass-1.html": {
+  "findings": []
+ },
+ "html/heading.nesting/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "heading.nesting",
+    "locator": "html > body > h3:nth-of-type(1)",
+    "severity": "major"
+   }
+  ]
+ },
+ "html/heading.nesting/pass-1.html": {
+  "findings": []
+ },
+ "html/heading.none/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "heading.none",
+    "locator": "html > body",
+    "severity": "major"
+   }
+  ]
+ },
+ "html/heading.none/pass-1.html": {
+  "findings": []
+ },
+ "html/heading.too_long/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "heading.too_long",
+    "locator": "html > body > h1:nth-of-type(1)",
+    "severity": "minor"
+   }
+  ]
+ },
+ "html/heading.too_long/pass-1.html": {
+  "findings": []
+ },
+ "html/img.alt.filename/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "img.alt.filename",
+    "locator": "html > body > img:nth-of-type(1)",
+    "severity": "major"
+   }
+  ]
+ },
+ "html/img.alt.filename/pass-1.html": {
+  "findings": []
+ },
+ "html/img.alt.meaningless/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "img.alt.meaningless",
+    "locator": "html > body > img:nth-of-type(1)",
+    "severity": "major"
+   }
+  ]
+ },
+ "html/img.alt.meaningless/pass-1.html": {
+  "findings": []
+ },
+ "html/img.alt.missing/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "img.alt.missing",
+    "locator": "html > body > img:nth-of-type(1)",
+    "severity": "severe"
+   }
+  ]
+ },
+ "html/img.alt.missing/pass-1.html": {
+  "findings": []
+ },
+ "html/img.alt.too_long/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "img.alt.too_long",
+    "locator": "html > body > img:nth-of-type(1)",
+    "severity": "minor"
+   }
+  ]
+ },
+ "html/img.alt.too_long/pass-1.html": {
+  "findings": []
+ },
+ "html/img.decorative.interactive/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "img.decorative.interactive",
+    "locator": "html > body > a:nth-of-type(1) > img:nth-of-type(1)",
+    "severity": "major"
+   }
+  ]
+ },
+ "html/img.decorative.interactive/pass-1.html": {
+  "findings": []
+ },
+ "html/link.adjacent.duplicate/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "link.adjacent.duplicate",
+    "locator": "html > body > a:nth-of-type(2)",
+    "severity": "minor"
+   }
+  ]
+ },
+ "html/link.adjacent.duplicate/pass-1.html": {
+  "findings": []
+ },
+ "html/link.iframe.title/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "link.iframe.title",
+    "locator": "html > body > iframe:nth-of-type(1)",
+    "severity": "minor"
+   }
+  ]
+ },
+ "html/link.iframe.title/pass-1.html": {
+  "findings": []
+ },
+ "html/link.text.generic/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "link.text.generic",
+    "locator": "html > body > a:nth-of-type(1)",
+    "severity": "major"
+   }
+  ]
+ },
+ "html/link.text.generic/pass-1.html": {
+  "findings": []
+ },
+ "html/list.not_marked/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "list.not_marked",
+    "locator": "html > body > p:nth-of-type(1)",
+    "severity": "minor"
+   }
+  ]
+ },
+ "html/list.not_marked/pass-1.html": {
+  "findings": []
+ },
+ "html/media.captions.auto/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "media.captions.auto",
+    "locator": "html > body > iframe:nth-of-type(1)",
+    "severity": "major"
+   }
+  ],
+  "probe": {
+   "https://youtube.com/embed/abc": "auto"
+  }
+ },
+ "html/media.captions.auto/pass-1.html": {
+  "findings": [],
+  "probe": {
+   "https://youtube.com/embed/abc": "manual"
+  }
+ },
+ "html/media.captions.missing/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "media.captions.missing",
+    "locator": "html > body > video:nth-of-type(1)",
+    "severity": "severe"
+   }
+  ]
+ },
+ "html/media.captions.missing/pass-1.html": {
+  "findings": []
+ },
+ "html/media.private/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "media.private",
+    "locator": "html > body > iframe:nth-of-type(1)",
+    "severity": "major"
+   }
+  ],
+  "probe": {
+   "https://youtube.com/embed/abc": "private"
+  }
+ },
+ "html/media.private/pass-1.html": {
+  "findings": [],
+  "probe": {
+   "https://youtube.com/embed/abc": "manual"
+  }
+ },
+ "html/table.caption.missing/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "table.caption.missing",
+    "locator": "html > body > table:nth-of-type(1)",
+    "severity": "minor"
+   }
+  ]
+ },
+ "html/table.caption.missing/pass-1.html": {
+  "findings": []
+ },
+ "html/table.empty/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "table.empty",
+    "locator": "html > body > table:nth-of-type(1)",
+    "severity": "minor"
+   }
+  ]
+ },
+ "html/table.empty/pass-1.html": {
+  "findings": []
+ },
+ "html/table.header.missing/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "table.header.missing",
+    "locator": "html > body > table:nth-of-type(1)",
+    "severity": "major"
+   }
+  ]
+ },
+ "html/table.header.missing/pass-1.html": {
+  "findings": []
+ },
+ "html/table.header.scope/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "table.header.scope",
+    "locator": "html > body > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(1) > th:nth-of-type(1)",
+    "severity": "minor"
+   }
+  ]
+ },
+ "html/table.header.scope/pass-1.html": {
+  "findings": []
+ },
+ "html/target.too_small/fail-1.html": {
+  "findings": [
+   {
+    "check_id": "target.too_small",
+    "locator": "html > body > button:nth-of-type(1)",
+    "severity": "minor"
+   }
+  ]
+ },
+ "html/target.too_small/pass-1.html": {
+  "findings": []
+ },
+ "pdf/contrast.insufficient/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "contrast.insufficient",
+    "locator": "page:1",
+    "severity": "major"
+   }
+  ]
+ },
+ "pdf/contrast.insufficient/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/doc.encrypted/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "doc.encrypted",
+    "locator": "document",
+    "severity": "severe"
+   }
+  ]
+ },
+ "pdf/doc.encrypted/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/doc.lang.missing/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "doc.lang.missing",
+    "locator": "document",
+    "severity": "major"
+   }
+  ]
+ },
+ "pdf/doc.lang.missing/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/doc.malformed/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "doc.malformed",
+    "locator": "document",
+    "severity": "severe"
+   }
+  ]
+ },
+ "pdf/doc.malformed/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/doc.title.missing/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "doc.title.missing",
+    "locator": "document",
+    "severity": "major"
+   }
+  ]
+ },
+ "pdf/doc.title.missing/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/font.too_small/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "font.too_small",
+    "locator": "page:1",
+    "severity": "minor"
+   }
+  ]
+ },
+ "pdf/font.too_small/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/heading.depth/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "heading.depth",
+    "locator": "struct:6:H5",
+    "severity": "minor"
+   }
+  ]
+ },
+ "pdf/heading.depth/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/heading.nesting/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "heading.nesting",
+    "locator": "struct:3:H3",
+    "severity": "major"
+   }
+  ]
+ },
+ "pdf/heading.nesting/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/heading.none/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "heading.none",
+    "locator": "document",
+    "severity": "major"
+   }
+  ]
+ },
+ "pdf/heading.none/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/heading.start/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "heading.start",
+    "locator": "struct:2:H2",
+    "severity": "major"
+   }
+  ]
+ },
+ "pdf/heading.start/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/img.alt.missing/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "img.alt.missing",
+    "locator": "struct:3:Figure",
+    "severity": "severe"
+   }
+  ]
+ },
+ "pdf/img.alt.missing/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/pdf.scanned/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "pdf.scanned",
+    "locator": "document",
+    "severity": "severe"
+   },
+   {
+    "check_id": "pdf.untagged",
+    "locator": "document",
+    "severity": "severe"
+   }
+  ]
+ },
+ "pdf/pdf.scanned/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/pdf.untagged/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "pdf.untagged",
+    "locator": "document",
+    "severity": "severe"
+   }
+  ]
+ },
+ "pdf/pdf.untagged/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/reading_order/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "reading_order",
+    "locator": "page:1",
+    "severity": "major"
+   }
+  ]
+ },
+ "pdf/reading_order/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/table.header.missing/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "table.header.missing",
+    "locator": "struct:3:Table",
+    "severity": "major"
+   }
+  ]
+ },
+ "pdf/table.header.missing/pass-1.pdf": {
+  "findings": []
+ },
+ "pptx/contrast.insufficient/fail-1.pptx": {
+  "findings": [
+   {
+    "check_id": "contrast.insufficient",
+    "locator": "slide:1/shape:3/run:1",
+    "severity": "major"
+   }
+  ]
+ },
+ "pptx/contrast.insufficient/fail-2.pptx": {
+  "findings": [
+   {
+    "check_id": "contrast.insufficient",
+    "locator": "slide:1/shape:3/run:1",
+    "severity": "major"
+   }
+  ]
+ },
+ "pptx/contrast.insufficient/pass-1.pptx": {
+  "findings": []
+ },
+ "pptx/doc.lang.missing/fail-1.pptx": {
+  "findings": [
+   {
+    "check_id": "doc.lang.missing",
+    "locator": "ppt/presentation.xml#p:defaultTextStyle",
+    "severity": "major"
+   }
+  ]
+ },
+ "pptx/doc.lang.missing/pass-1.pptx": {
+  "findings": []
+ },
+ "pptx/doc.lang.wrong/fail-1.pptx": {
+  "findings": [
+   {
+    "check_id": "doc.lang.wrong",
+    "locator": "ppt/presentation.xml#p:defaultTextStyle",
+    "severity": "major"
+   }
+  ]
+ },
+ "pptx/doc.lang.wrong/pass-1.pptx": {
+  "findings": []
+ },
+ "pptx/doc.malformed/fail-1.pptx": {
+  "findings": [
+   {
+    "check_id": "doc.malformed",
+    "locator": "document",
+    "severity": "severe"
+   }
+  ]
+ },
+ "pptx/doc.malformed/pass-1.pptx": {
+  "findings": []
+ },
+ "pptx/doc.title.missing/fail-1.pptx": {
+  "findings": [
+   {
+    "check_id": "doc.title.missing",
+    "locator": "docProps/core.xml#dc:title",
+    "severity": "major"
+   }
+  ]
+ },
+ "pptx/doc.title.missing/pass-1.pptx": {
+  "findings": []
+ },
+ "pptx/font.too_small/fail-1.pptx": {
+  "findings": [
+   {
+    "check_id": "font.too_small",
+    "locator": "slide:1/shape:3/run:1",
+    "severity": "minor"
+   }
+  ]
+ },
+ "pptx/font.too_small/pass-1.pptx": {
+  "findings": []
+ },
+ "pptx/img.alt.missing/fail-1.pptx": {
+  "findings": [
+   {
+    "check_id": "img.alt.missing",
+    "locator": "slide:1/shape:4",
+    "severity": "severe"
+   }
+  ]
+ },
+ "pptx/img.alt.missing/pass-1.pptx": {
+  "findings": []
+ },
+ "pptx/link.text.generic/fail-1.pptx": {
+  "findings": [
+   {
+    "check_id": "link.text.generic",
+    "locator": "slide:1/shape:3/run:1",
+    "severity": "major"
+   }
+  ]
+ },
+ "pptx/link.text.generic/pass-1.pptx": {
+  "findings": []
+ },
+ "pptx/reading_order/fail-1.pptx": {
+  "findings": [
+   {
+    "check_id": "reading_order",
+    "locator": "slide:1",
+    "severity": "major"
+   }
+  ]
+ },
+ "pptx/reading_order/pass-1.pptx": {
+  "findings": []
+ },
+ "pptx/slide.title.missing/fail-1.pptx": {
+  "findings": [
+   {
+    "check_id": "slide.title.missing",
+    "locator": "slide:1",
+    "severity": "major"
+   }
+  ]
+ },
+ "pptx/slide.title.missing/pass-1.pptx": {
+  "findings": []
+ },
+ "pptx/table.header.missing/fail-1.pptx": {
+  "findings": [
+   {
+    "check_id": "table.header.missing",
+    "locator": "slide:1/shape:5",
+    "severity": "major"
+   }
+  ]
+ },
+ "pptx/table.header.missing/pass-1.pptx": {
+  "findings": []
+ },
+ "xlsx/contrast.insufficient/fail-1.xlsx": {
+  "findings": [
+   {
+    "check_id": "contrast.insufficient",
+    "locator": "Data!A1",
+    "severity": "major"
+   }
+  ]
+ },
+ "xlsx/contrast.insufficient/fail-2.xlsx": {
+  "findings": [
+   {
+    "check_id": "contrast.insufficient",
+    "locator": "Data!A1",
+    "severity": "major"
+   }
+  ]
+ },
+ "xlsx/contrast.insufficient/pass-1.xlsx": {
+  "findings": []
+ },
+ "xlsx/doc.malformed/fail-1.xlsx": {
+  "findings": [
+   {
+    "check_id": "doc.malformed",
+    "locator": "document",
+    "severity": "severe"
+   }
+  ]
+ },
+ "xlsx/doc.malformed/pass-1.xlsx": {
+  "findings": []
+ },
+ "xlsx/doc.title.missing/fail-1.xlsx": {
+  "findings": [
+   {
+    "check_id": "doc.title.missing",
+    "locator": "docProps/core.xml#dc:title",
+    "severity": "major"
+   }
+  ]
+ },
+ "xlsx/doc.title.missing/pass-1.xlsx": {
+  "findings": []
+ },
+ "xlsx/font.too_small/fail-1.xlsx": {
+  "findings": [
+   {
+    "check_id": "font.too_small",
+    "locator": "Data!A1",
+    "severity": "minor"
+   }
+  ]
+ },
+ "xlsx/font.too_small/pass-1.xlsx": {
+  "findings": []
+ },
+ "xlsx/img.alt.missing/fail-1.xlsx": {
+  "findings": [
+   {
+    "check_id": "img.alt.missing",
+    "locator": "Data!shape:7",
+    "severity": "severe"
+   }
+  ]
+ },
+ "xlsx/img.alt.missing/pass-1.xlsx": {
+  "findings": []
+ },
+ "xlsx/link.text.generic/fail-1.xlsx": {
+  "findings": [
+   {
+    "check_id": "link.text.generic",
+    "locator": "Data!A2",
+    "severity": "major"
+   }
+  ]
+ },
+ "xlsx/link.text.generic/pass-1.xlsx": {
+  "findings": []
+ },
+ "xlsx/table.header.missing/fail-1.xlsx": {
+  "findings": [
+   {
+    "check_id": "table.header.missing",
+    "locator": "Data!A3",
+    "severity": "major"
+   }
+  ]
+ },
+ "xlsx/table.header.missing/pass-1.xlsx": {
+  "findings": []
+ },
+ "xlsx/xlsx.a1.empty/fail-1.xlsx": {
+  "findings": [
+   {
+    "check_id": "xlsx.a1.empty",
+    "locator": "Data!A1",
+    "severity": "minor"
+   }
+  ]
+ },
+ "xlsx/xlsx.a1.empty/pass-1.xlsx": {
+  "findings": []
+ }
+}

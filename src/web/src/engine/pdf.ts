@@ -1,0 +1,144 @@
+import { PDFArray, PDFDict, PDFDocument, PDFHexString, PDFName, PDFNumber, PDFRef, PDFString } from 'pdf-lib'
+import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs'
+import { Malformed, clean, headingSeq, need, noFix, type Ctx, type Fix } from './common'
+
+export { pdfjs }
+const n = (s: string) => PDFName.of(s)
+const nameOf = (o: any) => o instanceof PDFName ? o.decodeText() : String(o ?? '').replace(/^\//, '')
+const strOf = (o: any) => o instanceof PDFString || o instanceof PDFHexString ? o.decodeText() : ''
+
+interface El { n: number; type: string; alt: string; node: PDFDict }
+
+function structOf(doc: PDFDocument): { els: El[]; order: [string | null, number][] } {
+  const ctx = doc.context, els: El[] = [], order: [string | null, number][] = []
+  const root = doc.catalog.lookup(n('StructTreeRoot'))
+  if (!(root instanceof PDFDict)) return { els, order }
+  const rolemap = root.lookup(n('RoleMap'))
+  const seen = new Set<string>()
+  const refKey = (r: any) => r instanceof PDFRef ? r.toString() : null
+
+  const visit = (raw: any, pg: string | null) => {
+    if (raw instanceof PDFRef) {
+      if (seen.has(raw.toString())) return
+      seen.add(raw.toString())
+    }
+    const node = ctx.lookup(raw)
+    if (node instanceof PDFArray) { node.asArray().forEach(k => visit(k, pg)); return }
+    if (!(node instanceof PDFDict)) return
+    const page = refKey(node.get(n('Pg'))) ?? pg
+    if (node.lookup(n('Type')) === n('MCR')) {
+      const m = node.lookup(n('MCID'))
+      if (m instanceof PDFNumber) order.push([page, m.asNumber()])
+      return
+    }
+    const S = node.lookup(n('S'))
+    if (!S) return
+    let s = nameOf(S)
+    if (rolemap instanceof PDFDict && rolemap.lookup(n(s))) s = nameOf(rolemap.lookup(n(s)))
+    els.push({ n: els.length + 1, type: s, alt: strOf(node.lookup(n('Alt'))), node })
+    const k = node.get(n('K')), kv = k ? ctx.lookup(k) : undefined
+    for (const kid of kv instanceof PDFArray ? kv.asArray() : k ? [k] : []) {
+      const v = ctx.lookup(kid)
+      if (v instanceof PDFNumber) order.push([page, v.asNumber()])
+      else visit(kid, page)
+    }
+  }
+  const k = root.get(n('K'))
+  if (k) visit(k, null)
+  return { els, order }
+}
+
+function descendants(doc: PDFDocument, node: PDFDict, rolemap: any): string[] {
+  const out: string[] = []
+  const k = node.get(n('K')), kv = k ? doc.context.lookup(k) : undefined
+  for (const kid of kv instanceof PDFArray ? kv.asArray() : k ? [k] : []) {
+    const v = doc.context.lookup(kid)
+    if (v instanceof PDFDict && v.lookup(n('S'))) {
+      let s = nameOf(v.lookup(n('S')))
+      if (rolemap instanceof PDFDict && rolemap.lookup(n(s))) s = nameOf(rolemap.lookup(n(s)))
+      out.push(s, ...descendants(doc, v, rolemap))
+    }
+  }
+  return out
+}
+
+export async function loadPdf(data: Uint8Array) {
+  return PDFDocument.load(data, { ignoreEncryption: true, updateMetadata: false, throwOnInvalidObject: true })
+}
+
+export async function checkPdf(data: Uint8Array, ctx: Ctx) {
+  const p = ctx.p
+  let doc: PDFDocument
+  try {
+    doc = await loadPdf(data)
+    doc.getPages()
+  } catch (e) { throw new Malformed(String(e)) }
+  if (doc.isEncrypted) { ctx.add('doc.encrypted', 'document'); return }
+  if (!clean(doc.getTitle())) ctx.add('doc.title.missing', 'document')
+  if (!clean(strOf(doc.catalog.lookup(n('Lang'))))) ctx.add('doc.lang.missing', 'document')
+  const mark = doc.catalog.lookup(n('MarkInfo'))
+  const marked = mark instanceof PDFDict && String(mark.lookup(n('Marked'))) === 'true'
+  const tagged = !!doc.catalog.lookup(n('StructTreeRoot')) && marked
+  if (!tagged) ctx.add('pdf.untagged', 'document')
+
+  const task = pdfjs.getDocument({ data: data.slice(), isEvalSupported: false, verbosity: 0 })
+  const pdf = await task.promise
+  let anyText = false
+  const allText: string[] = []
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const tc = await (await pdf.getPage(i)).getTextContent()
+    let small = false
+    for (const item of tc.items as any[]) {
+      if (!clean(item.str)) continue
+      anyText = true
+      allText.push(item.str)
+      const size = Math.hypot(item.transform[2], item.transform[3])
+      if (size < p.min_font_pt - 0.01) small = true
+    }
+    if (small) ctx.add('font.too_small', `page:${i}`)
+  }
+  await task.destroy()
+  const pages = doc.getPages()
+  if (pages.length && !anyText) ctx.add('pdf.scanned', 'document')
+  if (!tagged) return
+
+  const { els, order } = structOf(doc)
+  const rolemap = (doc.catalog.lookup(n('StructTreeRoot')) as PDFDict).lookup(n('RoleMap'))
+  const seq: [number, string][] = []
+  for (const e of els) {
+    const l = `struct:${e.n}:${e.type}`
+    if (e.type === 'Figure' && !clean(e.alt)) ctx.add('img.alt.missing', l)
+    const m = e.type.match(/^H([1-6])$/)
+    if (m) seq.push([Number(m[1]), l])
+    if (e.type === 'Table' && !descendants(doc, e.node, rolemap).includes('TH')) ctx.add('table.header.missing', l)
+  }
+  headingSeq(ctx, seq, 'document', allText.join(' '), true)
+  pages.forEach((page, i) => {
+    const m = order.filter(o => o[0] === page.ref.toString()).map(o => o[1])
+    if (m.some((v, j) => j > 0 && v < m[j - 1])) ctx.add('reading_order', `page:${i + 1}`)
+  })
+}
+
+/** Features that the pdf-lib rewrite can damage. */
+export async function pdfRisks(data: Uint8Array): Promise<string[]> {
+  const doc = await loadPdf(data), risks: string[] = []
+  const form = doc.catalog.lookup(n('AcroForm'))
+  if (form instanceof PDFDict) {
+    risks.push('form fields')
+    if (form.lookup(n('SigFlags'))) risks.push('signatures')
+  }
+  return risks
+}
+
+export async function fixPdf(data: Uint8Array, f: Fix): Promise<Uint8Array> {
+  const doc = await loadPdf(data), c = f.check_id
+  if (c === 'doc.title.missing') doc.setTitle(need(f), { showInWindowTitleBar: true })
+  else if (c === 'doc.lang.missing') doc.catalog.set(n('Lang'), PDFHexString.fromText(need(f)))
+  else if (c === 'img.alt.missing') {
+    const el = structOf(doc).els.find(e => `struct:${e.n}:${e.type}` === f.locator)
+    if (!el) return noFix(f)
+    if (f.decorative) el.node.set(n('S'), n('Artifact'))
+    else el.node.set(n('Alt'), PDFHexString.fromText(need(f)))
+  } else return noFix(f)
+  return doc.save({ useObjectStreams: false, updateFieldAppearances: false })
+}

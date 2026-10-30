@@ -1,0 +1,62 @@
+version: 1
+params:
+  min_font_pt: 9
+  alt_max_chars: 120
+  heading_max_chars: 120
+  heading_max_depth: 4
+  heading_min_words: 20
+  page_max_words: 3000
+  contrast_normal: 4.5
+  contrast_large: 3.0
+  large_text_pt: 18
+  large_bold_text_pt: 14
+  min_target_px: 24
+  lang_min_words: 30
+severity_weights: {severe: 10, major: 3, minor: 1}
+vocab:
+  generic_link: [click here, here, read more, more, link, this link, learn more, details, click, go]
+  meaningless_alt: [image, picture, photo, graphic, img, icon, logo, spacer, placeholder, untitled, screenshot]
+  colors: {black: "000000", white: "ffffff", gray: "808080", grey: "808080", silver: "c0c0c0", red: "ff0000", green: "008000", blue: "0000ff", yellow: "ffff00", orange: "ffa500"}
+  stopwords:
+    en: [the, and, of, to, in, is, that, for, with, this, are, you, on, as, be]
+    es: [el, la, los, las, de, que, y, en, un, una, por, con, para, es, del]
+    fr: [le, la, les, des, et, que, un, une, pour, dans, est, du, avec, sur, au]
+    de: [der, die, das, und, ist, nicht, ein, eine, mit, von, zu, den, auf, für, dem]
+checks:
+  - {id: pdf.scanned, severity: severe, formats: [pdf], web_fix: none, message: "The PDF has no text layer. Run OCR on the file."}
+  - {id: pdf.untagged, severity: severe, formats: [pdf], web_fix: none, message: "The PDF has no tags. Export a tagged PDF from the source file."}
+  - {id: doc.encrypted, severity: severe, formats: [pdf], web_fix: none, message: "The PDF is encrypted. Remove the password and scan again."}
+  - {id: doc.malformed, severity: severe, formats: [pdf, docx, pptx, xlsx], web_fix: none, message: "The file structure is not valid. Export the file again from the source."}
+  - {id: img.alt.missing, severity: severe, formats: [html, pdf, docx, pptx, xlsx], web_fix: "yes", message: "The image has no alternative text. Add a description or mark it as decorative."}
+  - {id: media.captions.missing, severity: severe, formats: [html], web_fix: none, engines: [python], message: "The media has no captions. Add a caption track."}
+  - {id: media.captions.auto, severity: major, formats: [html], web_fix: none, engines: [python], message: "The media has only automatic captions. Edit the captions and publish them."}
+  - {id: media.private, severity: major, formats: [html], web_fix: none, engines: [python], message: "The media is private or not available. Publish the media or remove the link."}
+  - {id: doc.title.missing, severity: major, formats: [pdf, docx, pptx, xlsx], web_fix: "yes", message: "The document has no title. Add a title."}
+  - {id: doc.lang.missing, severity: major, formats: [pdf, docx, pptx], web_fix: "yes", message: "The document has no language. Set the language."}
+  - {id: doc.lang.wrong, severity: major, formats: [docx, pptx], web_fix: "yes", message: "The document language does not match the text. Correct the language."}
+  - {id: heading.none, severity: major, formats: [html, pdf, docx], web_fix: guided, message: "The document has no headings. Add headings to the sections."}
+  - {id: heading.start, severity: major, formats: [pdf, docx], web_fix: guided, web_fix_except: [pdf], message: "The first heading is not level 1. Change the heading level."}
+  - {id: heading.nesting, severity: major, formats: [html, pdf, docx], web_fix: guided, web_fix_except: [pdf], message: "The heading skips a level. Change the heading level."}
+  - {id: heading.depth, severity: minor, formats: [html, pdf, docx], web_fix: guided, web_fix_except: [pdf], message: "The heading is too deep. Use fewer heading levels."}
+  - {id: table.header.missing, severity: major, formats: [html, pdf, docx, pptx, xlsx], web_fix: "yes", web_fix_except: [pdf], message: "The table has no header row. Mark the first row as the header."}
+  - {id: table.header.scope, severity: minor, formats: [html], web_fix: "yes", message: "The header cell has no scope. Set the scope."}
+  - {id: table.caption.missing, severity: minor, formats: [html, docx], web_fix: "yes", message: "The table has no caption. Add a caption."}
+  - {id: table.empty, severity: minor, formats: [html], web_fix: "yes", message: "The table has no content. Remove the table."}
+  - {id: contrast.insufficient, severity: major, formats: [html, pdf, docx, pptx, xlsx], web_fix: suggest, web_fix_except: [pdf], engines_by_format: {pdf: [python]}, message: "The text contrast is too low. Use a color with more contrast."}
+  - {id: reading_order, severity: major, formats: [pdf, pptx], web_fix: "yes", web_fix_except: [pdf], message: "The reading order is not logical. Correct the order."}
+  - {id: slide.title.missing, severity: major, formats: [pptx], web_fix: "yes", message: "The slide has no title. Add a title."}
+  - {id: link.text.generic, severity: major, formats: [html, docx, pptx, xlsx], web_fix: "yes", message: "The link text does not give the destination. Write descriptive text."}
+  - {id: link.adjacent.duplicate, severity: minor, formats: [html], web_fix: "yes", message: "Adjacent links go to the same destination. Merge the links."}
+  - {id: link.iframe.title, severity: minor, formats: [html], web_fix: "yes", message: "The iframe has no title. Add a title."}
+  - {id: font.too_small, severity: minor, formats: [html, pdf, docx, pptx, xlsx], web_fix: "yes", web_fix_except: [pdf], message: "The font is smaller than {min_font_pt} pt. Increase the font size."}
+  - {id: text.justified, severity: minor, formats: [docx], web_fix: "yes", message: "The text is justified. Align the text to the left."}
+  - {id: list.not_marked, severity: minor, formats: [html, docx], web_fix: guided, message: "The text looks like a list but has no list markup. Use a real list."}
+  - {id: img.alt.too_long, severity: minor, formats: [html], web_fix: "yes", message: "The alternative text is longer than {alt_max_chars} characters. Shorten the text."}
+  - {id: img.alt.filename, severity: major, formats: [html], web_fix: "yes", message: "The alternative text is a file name. Write a description."}
+  - {id: img.alt.meaningless, severity: major, formats: [html], web_fix: "yes", message: "The alternative text has no meaning. Write a description."}
+  - {id: img.decorative.interactive, severity: major, formats: [html], web_fix: "yes", message: "The linked image has empty alternative text. Describe the link destination."}
+  - {id: img.not_inline, severity: minor, formats: [docx], web_fix: none, message: "The image is not inline with text. Set the image to inline."}
+  - {id: heading.too_long, severity: minor, formats: [html], web_fix: "yes", message: "The heading is longer than {heading_max_chars} characters. Shorten the heading."}
+  - {id: content.too_long, severity: minor, formats: [html], web_fix: none, message: "The page has more than {page_max_words} words. Split the page."}
+  - {id: target.too_small, severity: minor, formats: [html], web_fix: none, message: "The target is smaller than {min_target_px} px. Increase the size."}
+  - {id: xlsx.a1.empty, severity: minor, formats: [xlsx], web_fix: "yes", message: "Cell A1 is empty. Write the sheet title in cell A1."}

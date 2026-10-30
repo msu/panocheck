@@ -1,0 +1,55 @@
+:root {
+  --blue: #003f7f; --gold: #ffcb05; --ink: #1c2530; --muted: #55606c; --line: #d5dbe1; --bg: #fff; --tint: #f3f6f9;
+  --severe: #a4161a; --major: #8a4b00; --minor: #33506b;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+.skip { position: absolute; left: -999px; background: #fff; padding: 8px; }
+.skip:focus { left: 8px; top: 8px; z-index: 2; }
+a { color: var(--blue); }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.bar { background: var(--blue); border-bottom: 4px solid var(--gold); padding: 12px 0; }
+.bar :focus-visible { outline-color: var(--gold); }
+.dept { color: #fff; font-weight: 700; text-decoration: none; }
+.dept span { display: inline-block; margin-left: 10px; padding-left: 10px; border-left: 1px solid #ffffff80; font-weight: 400; }
+h1 { color: var(--blue); margin: 28px 0 4px; font-size: 2rem; }
+h2 { color: var(--blue); font-size: 1.25rem; margin: 0 0 8px; }
+h3 { font-size: 1rem; margin: 20px 0 8px; }
+.lead { font-size: 1.1rem; margin: 0 0 8px; }
+.privacy { margin: 0 0 20px; color: var(--muted); }
+.drop { display: block; border: 2px dashed var(--blue); border-radius: 6px; padding: 28px 16px; text-align: center; cursor: pointer; background: var(--tint); }
+.drop.over { background: #fff6cf; }
+.drop span { display: block; font-weight: 600; color: var(--blue); }
+.drop small { color: var(--muted); }
+.drop input { display: block; margin: 12px auto 0; max-width: 100%; }
+.status { min-height: 1.5em; margin: 12px 0; }
+.error { color: var(--severe); font-weight: 600; }
+.warn { border-left: 4px solid var(--gold); background: #fff9e0; padding: 8px 12px; }
+.hint { color: var(--muted); font-size: .9rem; margin: 4px 0 8px; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; margin-bottom: 40px; }
+@media (max-width: 800px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+button { font: inherit; padding: 6px 12px; border-radius: 4px; border: 1px solid var(--blue); background: var(--blue); color: #fff; cursor: pointer; }
+button.secondary { background: #fff; color: var(--blue); }
+button:disabled { opacity: .55; cursor: default; }
+.sev { padding-left: 8px; border-left: 4px solid; }
+.sev.severe { border-color: var(--severe); color: var(--severe); }
+.sev.major { border-color: var(--major); color: var(--major); }
+.sev.minor { border-color: var(--minor); color: var(--minor); }
+.findings { list-style: none; margin: 0; padding: 0; }
+.findings li { border: 1px solid var(--line); border-radius: 4px; margin-bottom: 6px; }
+.findings li.open { border-color: var(--blue); }
+.findings form, .findings .hint { padding: 0 10px 10px; margin: 0; }
+button.finding { display: block; width: 100%; text-align: left; background: none; color: inherit; border: 0; padding: 8px 10px; }
+button.finding code { display: block; color: var(--muted); font-size: .8rem; overflow-wrap: anywhere; }
+form label { display: block; font-weight: 600; margin-bottom: 8px; }
+form input, form select { display: block; width: 100%; font: inherit; font-weight: 400; padding: 5px 8px; margin-top: 2px; border: 1px solid #76808a; border-radius: 4px; }
+.swatch { display: inline-block; padding: 2px 8px; margin-right: 8px; border: 1px solid var(--line); }
+.preview-frame { width: 100%; height: 520px; border: 1px solid var(--line); background: #fff; }
+.pdf { max-width: 100%; height: auto; border: 1px solid var(--line); }
+.pager { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.docx { max-height: 640px; overflow: auto; border: 1px solid var(--line); }
+.outline { list-style: none; margin: 0; padding: 8px; border: 1px solid var(--line); max-height: 640px; overflow: auto; font-size: .9rem; white-space: pre-wrap; }
+.outline .hit { background: #fff1b3; }
+.foot { border-top: 1px solid var(--line); padding: 8px 0; color: var(--muted); font-size: .9rem; }
