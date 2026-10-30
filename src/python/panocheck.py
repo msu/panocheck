@@ -28,7 +28,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Callable, Iterable
 
 # BEGIN SPEC
-SPEC = json.loads(r'''{"version":1,"params":{"min_font_pt":9,"alt_max_chars":120,"heading_max_chars":120,"heading_max_depth":4,"heading_min_words":20,"page_max_words":3000,"contrast_normal":4.5,"contrast_large":3.0,"large_text_pt":18,"large_bold_text_pt":14,"min_target_px":24,"lang_min_words":30},"severity_weights":{"severe":10,"major":3,"minor":1},"vocab":{"generic_link":["click here","here","read more","more","link","this link","learn more","details","click","go"],"meaningless_alt":["image","picture","photo","graphic","img","icon","logo","spacer","placeholder","untitled","screenshot"],"colors":{"black":"000000","white":"ffffff","gray":"808080","grey":"808080","silver":"c0c0c0","red":"ff0000","green":"008000","blue":"0000ff","yellow":"ffff00","orange":"ffa500"},"stopwords":{"en":["the","and","of","to","in","is","that","for","with","this","are","you",true,"as","be"],"es":["el","la","los","las","de","que","y","en","un","una","por","con","para","es","del"],"fr":["le","la","les","des","et","que","un","une","pour","dans","est","du","avec","sur","au"],"de":["der","die","das","und","ist","nicht","ein","eine","mit","von","zu","den","auf","f\u00fcr","dem"]}},"checks":[{"id":"pdf.scanned","severity":"severe","formats":["pdf"],"web_fix":"none","message":"The PDF has no text layer. Run OCR on the file."},{"id":"pdf.untagged","severity":"severe","formats":["pdf"],"web_fix":"none","message":"The PDF has no tags. Export a tagged PDF from the source file."},{"id":"doc.encrypted","severity":"severe","formats":["pdf"],"web_fix":"none","message":"The PDF is encrypted. Remove the password and scan again."},{"id":"doc.malformed","severity":"severe","formats":["pdf","docx","pptx","xlsx"],"web_fix":"none","message":"The file structure is not valid. Export the file again from the source."},{"id":"img.alt.missing","severity":"severe","formats":["html","pdf","docx","pptx","xlsx"],"web_fix":"yes","message":"The image has no alternative text. Add a description or mark it as decorative."},{"id":"media.captions.missing","severity":"severe","formats":["html"],"web_fix":"none","engines":["python"],"message":"The media has no captions. Add a caption track."},{"id":"media.captions.auto","severity":"major","formats":["html"],"web_fix":"none","engines":["python"],"message":"The media has only automatic captions. Edit the captions and publish them."},{"id":"media.private","severity":"major","formats":["html"],"web_fix":"none","engines":["python"],"message":"The media is private or not available. Publish the media or remove the link."},{"id":"doc.title.missing","severity":"major","formats":["pdf","docx","pptx","xlsx"],"web_fix":"yes","message":"The document has no title. Add a title."},{"id":"doc.lang.missing","severity":"major","formats":["pdf","docx","pptx"],"web_fix":"yes","message":"The document has no language. Set the language."},{"id":"doc.lang.wrong","severity":"major","formats":["docx","pptx"],"web_fix":"yes","message":"The document language does not match the text. Correct the language."},{"id":"heading.none","severity":"major","formats":["html","pdf","docx"],"web_fix":"guided","message":"The document has no headings. Add headings to the sections."},{"id":"heading.start","severity":"major","formats":["pdf","docx"],"web_fix":"guided","web_fix_except":["pdf"],"message":"The first heading is not level 1. Change the heading level."},{"id":"heading.nesting","severity":"major","formats":["html","pdf","docx"],"web_fix":"guided","web_fix_except":["pdf"],"message":"The heading skips a level. Change the heading level."},{"id":"heading.depth","severity":"minor","formats":["html","pdf","docx"],"web_fix":"guided","web_fix_except":["pdf"],"message":"The heading is too deep. Use fewer heading levels."},{"id":"table.header.missing","severity":"major","formats":["html","pdf","docx","pptx","xlsx"],"web_fix":"yes","web_fix_except":["pdf"],"message":"The table has no header row. Mark the first row as the header."},{"id":"table.header.scope","severity":"minor","formats":["html"],"web_fix":"yes","message":"The header cell has no scope. Set the scope."},{"id":"table.caption.missing","severity":"minor","formats":["html","docx"],"web_fix":"yes","message":"The table has no caption. Add a caption."},{"id":"table.empty","severity":"minor","formats":["html"],"web_fix":"yes","message":"The table has no content. Remove the table."},{"id":"contrast.insufficient","severity":"major","formats":["html","pdf","docx","pptx","xlsx"],"web_fix":"suggest","web_fix_except":["pdf"],"engines_by_format":{"pdf":["python"]},"message":"The text contrast is too low. Use a color with more contrast."},{"id":"reading_order","severity":"major","formats":["pdf","pptx"],"web_fix":"yes","web_fix_except":["pdf"],"message":"The reading order is not logical. Correct the order."},{"id":"slide.title.missing","severity":"major","formats":["pptx"],"web_fix":"yes","message":"The slide has no title. Add a title."},{"id":"link.text.generic","severity":"major","formats":["html","docx","pptx","xlsx"],"web_fix":"yes","message":"The link text does not give the destination. Write descriptive text."},{"id":"link.adjacent.duplicate","severity":"minor","formats":["html"],"web_fix":"yes","message":"Adjacent links go to the same destination. Merge the links."},{"id":"link.iframe.title","severity":"minor","formats":["html"],"web_fix":"yes","message":"The iframe has no title. Add a title."},{"id":"font.too_small","severity":"minor","formats":["html","pdf","docx","pptx","xlsx"],"web_fix":"yes","web_fix_except":["pdf"],"message":"The font is smaller than {min_font_pt} pt. Increase the font size."},{"id":"text.justified","severity":"minor","formats":["docx"],"web_fix":"yes","message":"The text is justified. Align the text to the left."},{"id":"list.not_marked","severity":"minor","formats":["html","docx"],"web_fix":"guided","message":"The text looks like a list but has no list markup. Use a real list."},{"id":"img.alt.too_long","severity":"minor","formats":["html"],"web_fix":"yes","message":"The alternative text is longer than {alt_max_chars} characters. Shorten the text."},{"id":"img.alt.filename","severity":"major","formats":["html"],"web_fix":"yes","message":"The alternative text is a file name. Write a description."},{"id":"img.alt.meaningless","severity":"major","formats":["html"],"web_fix":"yes","message":"The alternative text has no meaning. Write a description."},{"id":"img.decorative.interactive","severity":"major","formats":["html"],"web_fix":"yes","message":"The linked image has empty alternative text. Describe the link destination."},{"id":"img.not_inline","severity":"minor","formats":["docx"],"web_fix":"none","message":"The image is not inline with text. Set the image to inline."},{"id":"heading.too_long","severity":"minor","formats":["html"],"web_fix":"yes","message":"The heading is longer than {heading_max_chars} characters. Shorten the heading."},{"id":"content.too_long","severity":"minor","formats":["html"],"web_fix":"none","message":"The page has more than {page_max_words} words. Split the page."},{"id":"target.too_small","severity":"minor","formats":["html"],"web_fix":"none","message":"The target is smaller than {min_target_px} px. Increase the size."},{"id":"xlsx.a1.empty","severity":"minor","formats":["xlsx"],"web_fix":"yes","message":"Cell A1 is empty. Write the sheet title in cell A1."}]}''')
+SPEC = json.loads(r'''{"version":1,"params":{"min_font_pt":9,"alt_max_chars":120,"heading_max_chars":120,"heading_max_depth":4,"heading_min_words":20,"page_max_words":3000,"contrast_normal":4.5,"contrast_large":3.0,"large_text_pt":18,"large_bold_text_pt":14,"min_target_px":24,"lang_min_words":30},"severity_weights":{"severe":10,"major":3,"minor":1},"vocab":{"generic_link":["click here","here","read more","more","link","this link","learn more","details","click","go"],"meaningless_alt":["image","picture","photo","graphic","img","icon","logo","spacer","placeholder","untitled","screenshot"],"colors":{"black":"000000","white":"ffffff","gray":"808080","grey":"808080","silver":"c0c0c0","red":"ff0000","green":"008000","blue":"0000ff","yellow":"ffff00","orange":"ffa500"},"stopwords":{"en":["the","and","of","to","in","is","that","for","with","this","are","you",true,"as","be"],"es":["el","la","los","las","de","que","y","en","un","una","por","con","para","es","del"],"fr":["le","la","les","des","et","que","un","une","pour","dans","est","du","avec","sur","au"],"de":["der","die","das","und","ist","nicht","ein","eine","mit","von","zu","den","auf","f\u00fcr","dem"]}},"checks":[{"id":"pdf.scanned","severity":"severe","formats":["pdf"],"web_fix":"none","message":"The PDF has no text layer. Run OCR on the file."},{"id":"pdf.untagged","severity":"severe","formats":["pdf"],"web_fix":"none","message":"The PDF has no tags. Export a tagged PDF from the source file."},{"id":"doc.encrypted","severity":"severe","formats":["pdf"],"web_fix":"none","message":"The PDF is encrypted. Remove the password and scan again."},{"id":"doc.malformed","severity":"severe","formats":["pdf","docx","pptx","xlsx"],"web_fix":"none","message":"The file structure is not valid. Export the file again from the source."},{"id":"img.alt.missing","severity":"severe","formats":["html","pdf","docx","pptx","xlsx"],"web_fix":"yes","message":"The image has no alternative text. Add a description or mark it as decorative."},{"id":"media.captions.missing","severity":"severe","formats":["html"],"web_fix":"none","engines":["python"],"message":"The media has no captions. Add a caption track."},{"id":"media.captions.auto","severity":"major","formats":["html"],"web_fix":"none","engines":["python"],"message":"The media has only automatic captions. Edit the captions and publish them."},{"id":"media.private","severity":"major","formats":["html"],"web_fix":"none","engines":["python"],"message":"The media is private or not available. Publish the media or remove the link."},{"id":"doc.title.missing","severity":"major","formats":["pdf","docx","pptx","xlsx"],"web_fix":"yes","message":"The document has no title. Add a title."},{"id":"doc.title.hidden","severity":"minor","formats":["pdf"],"web_fix":"yes","message":"The viewer shows the file name, not the title. Set the viewer to show the title."},{"id":"tag.empty","severity":"major","formats":["pdf"],"web_fix":"yes","message":"The text tag holds no text. Change the tag to a Div."},{"id":"doc.lang.missing","severity":"major","formats":["pdf","docx","pptx"],"web_fix":"yes","message":"The document has no language. Set the language."},{"id":"doc.lang.wrong","severity":"major","formats":["docx","pptx"],"web_fix":"yes","message":"The document language does not match the text. Correct the language."},{"id":"heading.none","severity":"major","formats":["html","pdf","docx"],"web_fix":"guided","message":"The document has no headings. Add headings to the sections."},{"id":"heading.start","severity":"major","formats":["pdf","docx"],"web_fix":"guided","web_fix_except":["pdf"],"message":"The first heading is not level 1. Change the heading level."},{"id":"heading.nesting","severity":"major","formats":["html","pdf","docx"],"web_fix":"guided","web_fix_except":["pdf"],"message":"The heading skips a level. Change the heading level."},{"id":"heading.depth","severity":"minor","formats":["html","pdf","docx"],"web_fix":"guided","web_fix_except":["pdf"],"message":"The heading is too deep. Use fewer heading levels."},{"id":"table.header.missing","severity":"major","formats":["html","pdf","docx","pptx","xlsx"],"web_fix":"yes","web_fix_except":["pdf"],"message":"The table has no header row. Mark the first row as the header."},{"id":"table.header.scope","severity":"minor","formats":["html"],"web_fix":"yes","message":"The header cell has no scope. Set the scope."},{"id":"table.caption.missing","severity":"minor","formats":["html","docx"],"web_fix":"yes","message":"The table has no caption. Add a caption."},{"id":"table.empty","severity":"minor","formats":["html"],"web_fix":"yes","message":"The table has no content. Remove the table."},{"id":"contrast.insufficient","severity":"major","formats":["html","pdf","docx","pptx","xlsx"],"web_fix":"suggest","web_fix_except":["pdf"],"engines_by_format":{"pdf":["python"]},"message":"The text contrast is too low. Use a color with more contrast."},{"id":"reading_order","severity":"major","formats":["pdf","pptx"],"web_fix":"yes","web_fix_except":["pdf"],"message":"The reading order is not logical. Correct the order."},{"id":"slide.title.missing","severity":"major","formats":["pptx"],"web_fix":"yes","message":"The slide has no title. Add a title."},{"id":"link.text.generic","severity":"major","formats":["html","docx","pptx","xlsx"],"web_fix":"yes","message":"The link text does not give the destination. Write descriptive text."},{"id":"link.adjacent.duplicate","severity":"minor","formats":["html"],"web_fix":"yes","message":"Adjacent links go to the same destination. Merge the links."},{"id":"link.iframe.title","severity":"minor","formats":["html"],"web_fix":"yes","message":"The iframe has no title. Add a title."},{"id":"font.too_small","severity":"minor","formats":["html","pdf","docx","pptx","xlsx"],"web_fix":"yes","web_fix_except":["pdf"],"message":"The font is smaller than {min_font_pt} pt. Increase the font size."},{"id":"text.justified","severity":"minor","formats":["docx"],"web_fix":"yes","message":"The text is justified. Align the text to the left."},{"id":"list.not_marked","severity":"minor","formats":["html","docx"],"web_fix":"guided","message":"The text looks like a list but has no list markup. Use a real list."},{"id":"img.alt.too_long","severity":"minor","formats":["html"],"web_fix":"yes","message":"The alternative text is longer than {alt_max_chars} characters. Shorten the text."},{"id":"img.alt.filename","severity":"major","formats":["html"],"web_fix":"yes","message":"The alternative text is a file name. Write a description."},{"id":"img.alt.meaningless","severity":"major","formats":["html"],"web_fix":"yes","message":"The alternative text has no meaning. Write a description."},{"id":"img.decorative.interactive","severity":"major","formats":["html"],"web_fix":"yes","message":"The linked image has empty alternative text. Describe the link destination."},{"id":"img.not_inline","severity":"minor","formats":["docx"],"web_fix":"none","message":"The image is not inline with text. Set the image to inline."},{"id":"heading.too_long","severity":"minor","formats":["html"],"web_fix":"yes","message":"The heading is longer than {heading_max_chars} characters. Shorten the heading."},{"id":"content.too_long","severity":"minor","formats":["html"],"web_fix":"none","message":"The page has more than {page_max_words} words. Split the page."},{"id":"target.too_small","severity":"minor","formats":["html"],"web_fix":"none","message":"The target is smaller than {min_target_px} px. Increase the size."},{"id":"xlsx.a1.empty","severity":"minor","formats":["xlsx"],"web_fix":"yes","message":"Cell A1 is empty. Write the sheet title in cell A1."}]}''')
 # END SPEC
 
 __version__ = "0.1.0"
@@ -825,8 +825,11 @@ def _name(o):
     return str(o).lstrip("/")
 
 
+TEXT_TAGS = {"P", "H", "H1", "H2", "H3", "H4", "H5", "H6", "LI", "Lbl", "LBody"}
+
+
 def pdf_struct(pdf) -> tuple[list[dict], list[tuple]]:
-    """Preorder struct elements {n, type, alt, ref} and the (page objgen, mcid) sequence in tree order."""
+    """Preorder struct elements {n, type, alt, ref, mcids, kids} and the (page objgen, mcid) sequence in tree order."""
     import pikepdf
     root = pdf.Root.get("/StructTreeRoot")
     if root is None:
@@ -834,10 +837,10 @@ def pdf_struct(pdf) -> tuple[list[dict], list[tuple]]:
     rolemap = root.get("/RoleMap", {})
     out, order, seen = [], [], set()
 
-    def visit(node, pg):
+    def visit(node, pg, parent):
         if isinstance(node, pikepdf.Array):
             for k in node:
-                visit(k, pg)
+                visit(k, pg, parent)
             return
         if not isinstance(node, pikepdf.Dictionary):
             return
@@ -850,24 +853,93 @@ def pdf_struct(pdf) -> tuple[list[dict], list[tuple]]:
         if node.get("/Type") == pikepdf.Name("/MCR"):
             if "/MCID" in node:
                 order.append((pg_id, int(node["/MCID"])))
+                if parent is not None:
+                    parent["mcids"].append((pg_id, int(node["/MCID"])))
             return
         if "/S" not in node:
             return
         s = _name(node["/S"])
         s = _name(rolemap.get("/" + s, "/" + s))
-        el = {"n": len(out) + 1, "type": s, "alt": str(node.get("/Alt", "")), "ref": node}
+        el = {"n": len(out) + 1, "type": s, "alt": str(node.get("/Alt", "")), "ref": node, "mcids": [], "kids": []}
         out.append(el)
+        if parent is not None:
+            parent["kids"].append(el)
         k = node.get("/K")
         kids = k if isinstance(k, pikepdf.Array) else [k] if k is not None else []
         for kid in kids:
             if isinstance(kid, (int, pikepdf.Object)) and not isinstance(kid, (pikepdf.Dictionary, pikepdf.Array)):
                 order.append((pg_id, int(kid)))
+                el["mcids"].append((pg_id, int(kid)))
             else:
-                visit(kid, page)
+                visit(kid, page, el)
     k = root.get("/K")
     if k is not None:
-        visit(k, None)
+        visit(k, None, None)
     return out, order
+
+
+def pdf_text_mcids(pdf) -> set:
+    """Return the (page objgen, mcid) pairs whose marked content shows text, also through form XObjects."""
+    import pikepdf
+    found = set()
+
+    def walk(obj, resources, stack, page_id, depth):
+        for operands, op in pikepdf.parse_content_stream(obj):
+            op = str(op)
+            if op in ("BDC", "BMC"):
+                mcid = None
+                if op == "BDC" and isinstance(operands[1], pikepdf.Dictionary):
+                    mcid = operands[1].get("/MCID")
+                stack.append(None if mcid is None else int(mcid))
+            elif op == "EMC":
+                if stack:
+                    stack.pop()
+            elif op in ("Tj", "TJ", "'", '"'):
+                found.update((page_id, m) for m in stack if m is not None)
+            elif op == "Do" and depth < 8:
+                xobj = resources.get("/XObject", {}).get(str(operands[0])) if resources is not None else None
+                if xobj is not None and xobj.get("/Subtype") == pikepdf.Name("/Form"):
+                    walk(xobj, xobj.get("/Resources", resources), stack, page_id, depth + 1)
+    for page in pdf.pages:
+        walk(page, page.obj.get("/Resources"), [], page.objgen, 0)
+    return found
+
+
+def _subtree(el):
+    yield el
+    for k in el["kids"]:
+        yield from _subtree(k)
+
+
+def tag_is_empty(el, with_text: set) -> bool:
+    """A text tag must show text. A tag that holds a figure is not empty."""
+    nodes = list(_subtree(el))
+    return el["type"] in TEXT_TAGS and not any(n["type"] == "Figure" for n in nodes) \
+        and not any(m in with_text for n in nodes for m in n["mcids"])
+
+
+def order_decreases(mcids: list[int]) -> bool:
+    """Compare MCIDs with one reference. Chrome references a page-wide wrapper MCID from several tags, so its position has no meaning."""
+    once = [m for m in mcids if mcids.count(m) == 1]
+    return any(b < a for a, b in zip(once, once[1:]))
+
+
+def page_background(pix, bbox, fg: str) -> str:
+    """Return the most common color in bbox, without pixels near the text color. A page render holds the real background."""
+    r0, g0, b0 = (int(fg[i:i + 2], 16) for i in (0, 2, 4))
+    x0, y0 = max(int(bbox[0]), 0), max(int(bbox[1]), 0)
+    x1, y1 = min(int(bbox[2]) + 1, pix.width), min(int(bbox[3]) + 1, pix.height)
+    counts: dict[tuple, int] = {}
+    data, stride, n = pix.samples, pix.stride, pix.n
+    for y in range(y0, y1):
+        for x in range(x0, x1):
+            i = y * stride + x * n
+            r, g, b = data[i], data[i + 1], data[i + 2]
+            if abs(r - r0) + abs(g - g0) + abs(b - b0) > 48:
+                counts[(r, g, b)] = counts.get((r, g, b), 0) + 1
+    if not counts:
+        return fg
+    return "%02x%02x%02x" % max(counts, key=counts.get)
 
 
 def check_pdf(data: bytes, ctx: Ctx):
@@ -893,6 +965,8 @@ def check_pdf(data: bytes, ctx: Ctx):
         raise Malformed(str(e))
     if not clean(title):
         ctx.add("doc.title.missing", "document")
+    elif not bool(pdf.Root.get("/ViewerPreferences", {}).get("/DisplayDocTitle", False)):
+        ctx.add("doc.title.hidden", "document")
     if not clean(str(pdf.Root.get("/Lang", ""))):
         ctx.add("doc.lang.missing", "document")
     tagged = "/StructTreeRoot" in pdf.Root and mark is not None and bool(mark.get("/Marked", False))
@@ -905,13 +979,16 @@ def check_pdf(data: bytes, ctx: Ctx):
         text.append(t)
         any_text = any_text or bool(clean(t))
         small = low = False
+        pix = page.get_pixmap(colorspace=pymupdf.csRGB, alpha=False)
         for block in page.get_text("dict")["blocks"]:
             for line in block.get("lines", []):
                 for span in line["spans"]:
                     if not clean(span["text"]):
                         continue
                     small = small or span["size"] < p.min_font_pt - 0.01
-                    low = low or low_contrast(f"{span['color']:06x}", "ffffff", span["size"], bool(span["flags"] & 16), p)
+                    if not low:
+                        fg = f"{span['color']:06x}"
+                        low = low_contrast(fg, page_background(pix, span["bbox"], fg), span["size"], bool(span["flags"] & 16), p)
         if small:
             ctx.add("font.too_small", f"page:{i}")
         if low:
@@ -921,13 +998,17 @@ def check_pdf(data: bytes, ctx: Ctx):
     if not tagged:
         return
     els, order = pdf_struct(pdf)
+    with_text = pdf_text_mcids(pdf)
     seq, by_page = [], {}
     for pg, mc in order:
-        by_page.setdefault(pg, []).append(mc)
+        if (pg, mc) in with_text:
+            by_page.setdefault(pg, []).append(mc)
     for e in els:
         l = f"struct:{e['n']}:{e['type']}"
         if e["type"] == "Figure" and not clean(e["alt"]):
             ctx.add("img.alt.missing", l)
+        if tag_is_empty(e, with_text):
+            ctx.add("tag.empty", l)
         m = re.fullmatch(r"H([1-6])", e["type"])
         if m:
             seq.append((int(m.group(1)), l))
@@ -937,8 +1018,7 @@ def check_pdf(data: bytes, ctx: Ctx):
                 ctx.add("table.header.missing", l)
     _heading_seq(ctx, seq, "document", " ".join(text), check_start=True)
     for i, page in enumerate(pages, 1):
-        m = by_page.get(page.objgen, [])
-        if any(b < a for a, b in zip(m, m[1:])):
+        if order_decreases(by_page.get(page.objgen, [])):
             ctx.add("reading_order", f"page:{i}")
 
 
@@ -1388,6 +1468,14 @@ def _fix_pdf(data, fixes):
                 pdf.Root["/ViewerPreferences"] = pikepdf.Dictionary(DisplayDocTitle=True)
             else:
                 vp["/DisplayDocTitle"] = True
+        elif c == "doc.title.hidden":
+            vp = pdf.Root.get("/ViewerPreferences")
+            if vp is None:
+                pdf.Root["/ViewerPreferences"] = pikepdf.Dictionary(DisplayDocTitle=True)
+            else:
+                vp["/DisplayDocTitle"] = True
+        elif c == "tag.empty" and f["locator"] in els:
+            els[f["locator"]]["ref"]["/S"] = pikepdf.Name("/Div")
         elif c == "doc.lang.missing":
             pdf.Root["/Lang"] = _need(f)
         elif c == "img.alt.missing" and f["locator"] in els:

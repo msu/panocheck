@@ -25,7 +25,7 @@ def value(check, path):
 
 
 CASES = [p for p, e in EXPECTED.items() if p.split("/")[1] not in NO_FIX and "fail" in p and e["findings"]
-         and not (p.startswith("pdf/") and p.split("/")[1] not in ("doc.title.missing", "doc.lang.missing", "img.alt.missing"))]
+         and not (p.startswith("pdf/") and p.split("/")[1] not in ("doc.title.missing", "doc.title.hidden", "tag.empty", "doc.lang.missing", "img.alt.missing"))]
 
 
 @pytest.mark.parametrize("path", CASES)

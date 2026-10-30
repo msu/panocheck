@@ -32,6 +32,8 @@ checks:
   - {id: media.captions.auto, severity: major, formats: [html], web_fix: none, engines: [python], message: "The media has only automatic captions. Edit the captions and publish them."}
   - {id: media.private, severity: major, formats: [html], web_fix: none, engines: [python], message: "The media is private or not available. Publish the media or remove the link."}
   - {id: doc.title.missing, severity: major, formats: [pdf, docx, pptx, xlsx], web_fix: "yes", message: "The document has no title. Add a title."}
+  - {id: doc.title.hidden, severity: minor, formats: [pdf], web_fix: "yes", message: "The viewer shows the file name, not the title. Set the viewer to show the title."}
+  - {id: tag.empty, severity: major, formats: [pdf], web_fix: "yes", message: "The text tag holds no text. Change the tag to a Div."}
   - {id: doc.lang.missing, severity: major, formats: [pdf, docx, pptx], web_fix: "yes", message: "The document has no language. Set the language."}
   - {id: doc.lang.wrong, severity: major, formats: [docx, pptx], web_fix: "yes", message: "The document language does not match the text. Correct the language."}
   - {id: heading.none, severity: major, formats: [html, pdf, docx], web_fix: guided, message: "The document has no headings. Add headings to the sections."}

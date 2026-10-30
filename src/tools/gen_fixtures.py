@@ -92,7 +92,7 @@ def xlsx(rows=f'<row r="1">{A1}</row>', tail="", extra=None, sheet_rels="", styl
     return pkg("xl/workbook.xml", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml", parts, [], title)
 
 
-def pdf(ops=None, struct=None, title="T", lang="en-US", tagged=True, encrypt=False):
+def pdf(ops=None, struct=None, title="T", lang="en-US", tagged=True, encrypt=False, show_title=True):
     """ops is a content stream. struct is a function(pdf, page) that returns the root K value."""
     ops = "/H1 <</MCID 0>> BDC BT /F1 24 Tf 72 700 Td (Title) Tj ET EMC /P <</MCID 1>> BDC BT /F1 12 Tf 72 670 Td (Body text) Tj ET EMC" if ops is None else ops
     d = pikepdf.new()
@@ -102,6 +102,8 @@ def pdf(ops=None, struct=None, title="T", lang="en-US", tagged=True, encrypt=Fal
     page.Contents = d.make_stream(ops.encode())
     if title:
         d.docinfo["/Title"] = title
+        if show_title:
+            d.Root.ViewerPreferences = pikepdf.Dictionary(DisplayDocTitle=True)
     if lang:
         d.Root.Lang = lang
     if tagged:
@@ -360,6 +362,8 @@ add("pdf", "pdf.untagged", "pass-1", pdf())
 add("pdf", "pdf.untagged", "fail-1", pdf(tagged=False), f("pdf.untagged", "document"))
 add("pdf", "doc.title.missing", "pass-1", pdf())
 add("pdf", "doc.title.missing", "fail-1", pdf(title=None), f("doc.title.missing", "document"))
+add("pdf", "doc.title.hidden", "pass-1", pdf())
+add("pdf", "doc.title.hidden", "fail-1", pdf(show_title=False), f("doc.title.hidden", "document"))
 add("pdf", "doc.lang.missing", "pass-1", pdf())
 add("pdf", "doc.lang.missing", "fail-1", pdf(lang=None), f("doc.lang.missing", "document"))
 FIG = tx(0, "H1") + tx(1, "Figure", y=670)
@@ -386,11 +390,19 @@ def table(th):
 TOPS = tx(0, "H1") + tx(1, "TD", y=670)
 add("pdf", "table.header.missing", "pass-1", pdf(TOPS, table(True)))
 add("pdf", "table.header.missing", "fail-1", pdf(TOPS, table(False)), f("table.header.missing", "struct:3:Table"))
+EMPTY = "/H1 <</MCID 0>> BDC BT /F1 24 Tf 72 700 Td (Title) Tj ET EMC /P <</MCID 1>> BDC 0 0 m EMC "
+add("pdf", "tag.empty", "pass-1", pdf())
+add("pdf", "tag.empty", "pass-2", pdf(tx(0, "H1") + tx(1, "P", y=670), lambda d, pg: [el(d, "H1", pg, 0), el(d, "P", pg, None, K=pikepdf.Array([el(d, "Figure", pg, 1, Alt="A map")]))]))
+add("pdf", "tag.empty", "fail-1", pdf(EMPTY), f("tag.empty", "struct:3:P"))
 add("pdf", "reading_order", "pass-1", pdf())
+add("pdf", "reading_order", "pass-2", pdf(struct=lambda d, pg: [el(d, "H1", pg, 0), el(d, "P", pg, 1), el(d, "Span", pg, 0)]))
 add("pdf", "reading_order", "fail-1", pdf(struct=lambda d, pg: [el(d, "P", pg, 1), el(d, "H1", pg, 0)]), f("reading_order", "page:1"))
 add("pdf", "font.too_small", "pass-1", pdf(tx(0, "H1", size=9), lambda d, pg: [el(d, "H1", pg, 0)]))
 add("pdf", "font.too_small", "fail-1", pdf(tx(0, "H1", size=7), lambda d, pg: [el(d, "H1", pg, 0)]), f("font.too_small", "page:1"))
 add("pdf", "contrast.insufficient", "pass-1", pdf(tx(0, "H1", color="0.1 0.1 0.1 rg"), lambda d, pg: [el(d, "H1", pg, 0)]))
+DARK = "0 0 0 rg 0 600 612 192 re f "
+add("pdf", "contrast.insufficient", "pass-2", pdf(DARK + tx(0, "H1", color="1 1 1 rg"), lambda d, pg: [el(d, "H1", pg, 0)]))
+add("pdf", "contrast.insufficient", "fail-2", pdf(DARK + tx(0, "H1", color="0.2 0.2 0.2 rg"), lambda d, pg: [el(d, "H1", pg, 0)]), f("contrast.insufficient", "page:1"))
 add("pdf", "contrast.insufficient", "fail-1", pdf(tx(0, "H1", color="0.8 0.8 0.8 rg"), lambda d, pg: [el(d, "H1", pg, 0)]), f("contrast.insufficient", "page:1"))
 
 

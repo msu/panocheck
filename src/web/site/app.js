@@ -26,7 +26,7 @@ const LABELS = {
 const BUTTONS = {
   'table.header.missing': 'Mark first row as header', 'table.header.scope': 'Set scope to column', 'table.empty': 'Remove table',
   'link.adjacent.duplicate': 'Merge links', 'font.too_small': 'Increase font size', 'text.justified': 'Align left',
-  reading_order: 'Move title first', 'xlsx.a1.empty': 'Write sheet title in A1',
+  reading_order: 'Move title first', 'doc.title.hidden': 'Show the title in the viewer', 'tag.empty': 'Change to Div', 'xlsx.a1.empty': 'Write sheet title in A1',
 }
 const IMG = ['img.alt.missing', 'img.alt.too_long', 'img.alt.filename', 'img.alt.meaningless', 'img.decorative.interactive']
 const LEVELS = ['heading.start', 'heading.nesting', 'heading.depth']

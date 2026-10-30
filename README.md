@@ -62,7 +62,7 @@ cd src/web && npm run serve    # http://localhost:5173/
 
 - The score is an estimate with provisional weights.
 - HTML contrast and target size use inline styles only. The tool does not render the page.
-- Contrast for PDF runs in Python only and assumes a white page.
+- Contrast for PDF runs in Python only. It takes the background from a page render.
 - Language detection uses a stopword table for English, Spanish, French and German.
 - Caption checks run in Python only.
 - Python HTML fixes serialize the document again. Web HTML fixes keep all other bytes.

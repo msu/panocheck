@@ -231,6 +231,24 @@ export default {
    "message": "The document has no title. Add a title."
   },
   {
+   "id": "doc.title.hidden",
+   "severity": "minor",
+   "formats": [
+    "pdf"
+   ],
+   "web_fix": "yes",
+   "message": "The viewer shows the file name, not the title. Set the viewer to show the title."
+  },
+  {
+   "id": "tag.empty",
+   "severity": "major",
+   "formats": [
+    "pdf"
+   ],
+   "web_fix": "yes",
+   "message": "The text tag holds no text. Change the tag to a Div."
+  },
+  {
    "id": "doc.lang.missing",
    "severity": "major",
    "formats": [

@@ -524,7 +524,19 @@
    }
   ]
  },
+ "pdf/contrast.insufficient/fail-2.pdf": {
+  "findings": [
+   {
+    "check_id": "contrast.insufficient",
+    "locator": "page:1",
+    "severity": "major"
+   }
+  ]
+ },
  "pdf/contrast.insufficient/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/contrast.insufficient/pass-2.pdf": {
   "findings": []
  },
  "pdf/doc.encrypted/fail-1.pdf": {
@@ -561,6 +573,18 @@
   ]
  },
  "pdf/doc.malformed/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/doc.title.hidden/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "doc.title.hidden",
+    "locator": "document",
+    "severity": "minor"
+   }
+  ]
+ },
+ "pdf/doc.title.hidden/pass-1.pdf": {
   "findings": []
  },
  "pdf/doc.title.missing/fail-1.pdf": {
@@ -688,6 +712,9 @@
  "pdf/reading_order/pass-1.pdf": {
   "findings": []
  },
+ "pdf/reading_order/pass-2.pdf": {
+  "findings": []
+ },
  "pdf/table.header.missing/fail-1.pdf": {
   "findings": [
    {
@@ -698,6 +725,21 @@
   ]
  },
  "pdf/table.header.missing/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/tag.empty/fail-1.pdf": {
+  "findings": [
+   {
+    "check_id": "tag.empty",
+    "locator": "struct:3:P",
+    "severity": "major"
+   }
+  ]
+ },
+ "pdf/tag.empty/pass-1.pdf": {
+  "findings": []
+ },
+ "pdf/tag.empty/pass-2.pdf": {
   "findings": []
  },
  "pptx/contrast.insufficient/fail-1.pptx": {
