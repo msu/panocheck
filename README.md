@@ -8,7 +8,7 @@ Document accessibility checker and fixer for HTML, DOCX, PPTX, XLSX and PDF.
 ## Layout
 
 ```
-src/md/       specification and design, start at src/md/README.md
+src/md/       intent and design decisions, start at src/md/README.md
 src/spec/     check IDs, severities, thresholds, messages
 src/python/   single-file library and CLI, plus tests
 src/web/      Vite + Preact app for GitHub Pages

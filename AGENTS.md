@@ -1,3 +1,5 @@
 # panocheck
 
-Document accessibility checker and fixer. See the src/md directory for more information.
+Document accessibility checker and fixer.
+
+See src/md/README.md for more information.
