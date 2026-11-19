@@ -29,14 +29,27 @@
         <a href="https://github.com/msu/panocheck/blob/main/src/web/site/index.html#L5">security policy</a> blocks all network requests. Because no data leaves your computer it is <a href="https://studentprivacy.ed.gov/ferpa">FERPA</a> compliant.</p>
 
     <label id="drop" class="drop">
-        <span>Drop a file here, or choose a file to analyze</span>
+        <span>Drop files here, or choose files to analyze</span>
         <small>HTML, DOCX, PPTX, XLSX or PDF</small>
-        <input id="file" type="file" accept=".html,.htm,.docx,.pptx,.xlsx,.pdf">
-        <span class="pick">Choose File</span>
+        <input id="file" type="file" multiple accept=".html,.htm,.docx,.pptx,.xlsx,.pdf">
+        <span class="pick">Choose Files</span>
     </label>
 
     <p id="status" role="status" class="status"></p>
     <p id="error" role="alert" class="error" hidden></p>
+
+    <section id="batch" aria-labelledby="batch-h" hidden>
+        <h2 id="batch-h" tabindex="-1"></h2>
+        <p class="hint">Select a file to see its issues and fix them.</p>
+        <table class="summary">
+            <thead><tr><th scope="col">File</th><th scope="col" class="num">Score</th><th scope="col" class="num">Issues</th><th scope="col" class="num">Fixes</th></tr></thead>
+            <tbody id="rows"></tbody>
+        </table>
+        <div class="actions">
+            <button id="save-all" disabled>Download fixed copies (zip)</button>
+            <button id="report-all" class="secondary">Download all reports</button>
+        </div>
+    </section>
 
     <div id="workspace" class="grid" hidden>
         <section aria-labelledby="results">

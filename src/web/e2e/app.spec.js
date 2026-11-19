@@ -91,3 +91,37 @@ test('PDF preview draws the page before and after a fix', async ({ page }) => {
     await expect(page.getByRole('status')).toContainText('0 issues remain');
     await expect.poll(dark).toBeGreaterThan(0);
 });
+test('scans many files, fixes one and downloads a zip', async ({ page }) => {
+    const errors = [];
+    page.on('pageerror', e => errors.push(e.stack ?? e.message));
+    await page.goto('/');
+    await page.setInputFiles('input[type=file]', [
+        `${FX}/docx/img.alt.missing/fail-1.docx`,
+        `${FX}/pdf/doc.title.missing/fail-1.pdf`,
+        `${FX}/html/img.alt.missing/fail-1.html`,
+    ]);
+    await expect(page.getByRole('status')).toContainText('3 files checked. 3 issues found.');
+    await expect(page.locator('#batch-h')).toBeFocused();
+    await expect(page.locator('#rows tr')).toHaveCount(3);
+    await expect(page.getByRole('button', { name: 'Download fixed copies (zip)' })).toBeDisabled();
+    const axe = await new AxeBuilder({ page }).analyze();
+    expect(axe.violations).toEqual([]);
+    await page.getByRole('button', { name: 'fail-1.pdf' }).click();
+    await expect(page.locator('#results')).toHaveText('fail-1.pdf');
+    await page.getByRole('button', { name: /no title/ }).click();
+    await page.getByLabel('Document title').fill('Syllabus');
+    await page.getByRole('button', { name: 'Apply fix' }).click();
+    await expect(page.getByRole('status')).toContainText('0 issues remain');
+    await page.getByRole('button', { name: 'fail-1.docx' }).click();
+    await expect(page.locator('#results')).toHaveText('fail-1.docx');
+    const [dl] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Download fixed copies (zip)' }).click()]);
+    expect(dl.suggestedFilename()).toBe('panocheck-fixed.zip');
+    const zip = readFileSync(await dl.path());
+    expect(zip.subarray(0, 2).toString()).toBe('PK');
+    expect(zip.includes('fail-1-accessible.pdf')).toBe(true);
+    expect(zip.includes('fail-1-accessible.docx')).toBe(false);
+    const [rep] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Download all reports' }).click()]);
+    const reports = JSON.parse(readFileSync(await rep.path(), 'utf8'));
+    expect(reports.map(r => r.findings.length)).toEqual([1, 0, 1]);
+    expect(errors).toEqual([]);
+});

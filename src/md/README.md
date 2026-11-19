@@ -20,7 +20,7 @@ panocheck finds and fixes accessibility issues in HTML, DOCX, PPTX, XLSX and PDF
 One check spec drives two engines. `src/spec/checks.yaml` holds the IDs, severities, thresholds and messages, and neither engine hard-codes them.
 
 - `src/python/panocheck.py`: the reference engine, for batch and Canvas scans
-- `src/web/`: a static app that checks one file, guides fixes and returns a corrected copy
+- `src/web/`: a static app that checks one or more files, guides fixes and returns corrected copies
 - `fixtures/`: generated documents and `expected.json`, which both engines must match
 
 ## Subtleties

@@ -1,4 +1,5 @@
 import { suggestColor } from './engine/common.js'
+import { zipSync } from './vendor/fflate.js'
 
 const worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' })
 let seq = 0
@@ -47,7 +48,9 @@ function h(tag, props = {}, ...kids) {
   return e
 }
 
-const state = { name: '', bytes: null, report: null, undo: [], selected: null, busy: false, page: 1 }
+// docs: one entry for each chosen file. doc: the file in the workspace.
+// A doc keeps its bytes only while it is open or has fixes, so that many files do not fill memory.
+const state = { docs: [], doc: null, selected: null, busy: false, page: 1 }
 
 function setStatus(text) { $('status').textContent = text }
 function setError(text) { $('error').textContent = text; $('error').hidden = !text }
@@ -101,7 +104,8 @@ function fixPanel(f) {
 const keyOf = f => `${f.check_id}|${f.locator}`
 
 function renderFindings(focusKey) {
-  const { report, selected } = state
+  const { selected } = state
+  const { report } = state.doc
   const host = $('findings')
   host.replaceChildren()
   if (!report.findings.length) {
@@ -127,7 +131,7 @@ function select(f, focusKey) {
   state.selected = f
   renderFindings(focusKey)
   const m = f?.locator.match(/^page:(\d+)$/)
-  if (m && state.report.format === 'pdf') state.page = Number(m[1])
+  if (m && state.doc.report.format === 'pdf') state.page = Number(m[1])
   renderPreview(false)
 }
 
@@ -140,7 +144,7 @@ async function drawPdf(host) {
   let live = true, task, render
   const job = (async () => {
     const { pdfjs } = await import('./engine/pdf.js')
-    task = pdfjs.getDocument({ data: state.bytes.slice(), isEvalSupported: false, verbosity: 0 })
+    task = pdfjs.getDocument({ data: state.doc.bytes.slice(), isEvalSupported: false, verbosity: 0 })
     const pdf = await task.promise
     if (!live) return
     state.page = Math.min(state.page, pdf.numPages)
@@ -172,7 +176,8 @@ async function drawPdf(host) {
 let drawnPage = null
 
 function renderPreview(changed) {
-  const { report, bytes, selected } = state
+  const { selected } = state
+  const { report, bytes } = state.doc
   const host = $('preview')
   if (report.format === 'html') {
     const mark = selected ? `<style>${selected.locator}{outline:3px solid #c00;outline-offset:2px}</style>` : ''
@@ -192,53 +197,101 @@ function renderPreview(changed) {
   }
 }
 
+
 // ---- document state ----
 
 function renderReport() {
-  const { report } = state
+  const { report, undo } = state.doc
   $('score').textContent = `Estimated score: ${report.score} of 100.`
   $('count').textContent = `${report.findings.length} issues.`
-  $('undo').disabled = !state.undo.length || state.busy
+  $('undo').disabled = !undo.length || state.busy
   renderFindings()
   renderPreview(true)
+  if (state.docs.length > 1) renderSummary()
 }
 
-async function open(file) {
+function renderSummary() {
+  const num = v => h('td', { class: 'num' }, v)
+  $('rows').replaceChildren(...state.docs.map(d => h('tr', { 'aria-current': d === state.doc ? 'true' : false },
+    h('th', { scope: 'row' }, d.report ? h('button', { class: 'link', onclick: () => show(d) }, d.name) : d.name),
+    d.report
+      ? [num(String(d.report.score)), num(String(d.report.findings.length)), num(d.undo.length ? String(d.undo.length) : '')]
+      : h('td', { colspan: 3, class: 'error' }, d.error))))
+  $('save-all').disabled = !state.docs.some(d => d.undo.length)
+}
+
+/** Scan each file in turn. One file opens at once; more files give a summary table. */
+async function load(files) {
+  files = [...files]
+  if (!files.length || state.busy) return
   setError('')
-  setStatus(`Checking ${file.name}.`)
-  Object.assign(state, { busy: true, selected: null, undo: [], report: null, bytes: null, page: 1 })
-  drawnPage = null
+  cancelPdf?.()
+  Object.assign(state, { docs: files.map(file => ({ file, name: file.name, bytes: null, report: null, undo: [], risks: null, error: '' })), doc: null, busy: true })
   $('workspace').hidden = true
-  $('risks').hidden = true
-  try {
-    const data = new Uint8Array(await file.arrayBuffer())
-    const report = await call({ op: 'scan', bytes: data.slice(), name: file.name })
-    Object.assign(state, { name: file.name, bytes: data, report, busy: false })
-    if (report.format === 'pdf' && !report.findings.some(f => f.check_id === 'doc.malformed' || f.check_id === 'doc.encrypted')) {
-      const risks = await call({ op: 'risks', bytes: data.slice() })
-      $('risks').textContent = `Warning: this PDF has ${risks.join(' and ')}. A fix rewrites the file and can damage them. Examine the output.`
-      $('risks').hidden = !risks.length
+  $('batch').hidden = true
+  for (const [i, d] of state.docs.entries()) {
+    setStatus(files.length > 1 ? `Checking file ${i + 1} of ${files.length}: ${d.name}.` : `Checking ${d.name}.`)
+    try {
+      d.report = await call({ op: 'scan', bytes: new Uint8Array(await d.file.arrayBuffer()), name: d.name })
+    } catch (e) {
+      d.error = `The check failed: ${e.message}`
     }
-    $('results').textContent = file.name
-    $('workspace').hidden = false
-    renderReport()
-    setStatus(`${report.findings.length} issues found in ${file.name}.`)
-    $('results').focus()
-  } catch (e) {
-    state.busy = false
-    setError(e.message)
-    setStatus('')
   }
+  state.busy = false
+  if (files.length === 1) {
+    const [d] = state.docs
+    if (d.error) { setError(d.error); setStatus(''); return }
+    if (await show(d)) setStatus(`${d.report.findings.length} issues found in ${d.name}.`)
+    return
+  }
+  renderSummary()
+  $('batch-h').textContent = `${files.length} files`
+  $('batch').hidden = false
+  const failed = state.docs.filter(d => d.error).length
+  const issues = state.docs.reduce((n, d) => n + (d.report?.findings.length ?? 0), 0)
+  setStatus(`${files.length} files checked. ${issues} issues found.${failed ? ` ${failed} files failed.` : ''}`)
+  $('batch-h').focus()
+}
+
+/** Open one scanned file in the workspace. */
+async function show(d) {
+  if (state.busy) return false
+  const prev = state.doc
+  if (prev && prev !== d && !prev.undo.length) prev.bytes = null
+  cancelPdf?.()
+  drawnPage = null
+  Object.assign(state, { doc: d, selected: null, page: 1 })
+  setError('')
+  try {
+    d.bytes ??= new Uint8Array(await d.file.arrayBuffer())
+    if (d.risks === null) {
+      const broken = d.report.findings.some(f => f.check_id === 'doc.malformed' || f.check_id === 'doc.encrypted')
+      d.risks = d.report.format === 'pdf' && !broken ? await call({ op: 'risks', bytes: d.bytes.slice() }) : []
+    }
+  } catch (e) {
+    setError(`The file ${d.name} did not open: ${e.message}`)
+    return false
+  }
+  $('risks').textContent = `Warning: this PDF has ${d.risks.join(' and ')}. A fix rewrites the file and can damage them. Examine the output.`
+  $('risks').hidden = !d.risks.length
+  $('results').textContent = d.name
+  $('workspace').hidden = false
+  renderReport()
+  if (state.docs.length > 1) setStatus(`${d.report.findings.length} issues in ${d.name}.`)
+  $('results').focus()
+  return true
 }
 
 async function applyFix(f, extra) {
+  const d = state.doc
   state.busy = true
   setError('')
   renderFindings()
   try {
-    const r = await call({ op: 'fix', bytes: state.bytes.slice(), name: state.name, fix: { check_id: f.check_id, locator: f.locator, ...extra } })
-    state.undo.push({ bytes: state.bytes, report: state.report })
-    Object.assign(state, { bytes: r.bytes, report: r.report, selected: null, busy: false })
+    const r = await call({ op: 'fix', bytes: d.bytes.slice(), name: d.name, fix: { check_id: f.check_id, locator: f.locator, ...extra } })
+    d.undo.push({ bytes: d.bytes, report: d.report })
+    Object.assign(d, { bytes: r.bytes, report: r.report })
+    Object.assign(state, { selected: null, busy: false })
     renderReport()
     setStatus(`Fix applied. ${r.report.findings.length} issues remain.`)
     $('results').focus()
@@ -250,10 +303,11 @@ async function applyFix(f, extra) {
 }
 
 function undo() {
-  const last = state.undo.pop()
-  Object.assign(state, { bytes: last.bytes, report: last.report, selected: null })
+  const d = state.doc
+  Object.assign(d, d.undo.pop())
+  state.selected = null
   renderReport()
-  setStatus(`Last fix removed. ${last.report.findings.length} issues remain.`)
+  setStatus(`Last fix removed. ${d.report.findings.length} issues remain.`)
   $('results').focus()
 }
 
@@ -263,11 +317,24 @@ function save(blob, filename) {
   URL.revokeObjectURL(a.href)
 }
 
-const stem = () => state.name.replace(/\.[^.]+$/, '')
+const stem = name => name.replace(/\.[^.]+$/, '')
+const fixedName = name => `${stem(name)}-accessible.${name.split('.').pop()}`
+const json = v => new Blob([JSON.stringify(v, null, 2)], { type: 'application/json' })
+const reportOf = d => ({ source: d.name, format: d.report.format, score: d.report.score, findings: d.report.findings })
+
+/** Zip the files that have fixes. Two files with the same name get a number prefix. */
+function saveAll() {
+  const out = {}
+  for (const d of state.docs.filter(d => d.undo.length)) {
+    let name = fixedName(d.name)
+    for (let i = 2; out[name]; i++) name = `${i}-${fixedName(d.name)}`
+    out[name] = d.bytes
+  }
+  save(new Blob([zipSync(out, { level: 0 })], { type: 'application/zip' }), 'panocheck-fixed.zip')
+}
 
 $('file').addEventListener('change', e => {
-  const f = e.target.files?.[0]
-  if (f) open(f)
+  load(e.target.files ?? [])
   e.target.value = ''
 })
 const drop = $('drop')
@@ -276,9 +343,10 @@ drop.addEventListener('dragleave', () => drop.classList.remove('over'))
 drop.addEventListener('drop', e => {
   e.preventDefault()
   drop.classList.remove('over')
-  const f = e.dataTransfer?.files[0]
-  if (f) open(f)
+  load(e.dataTransfer?.files ?? [])
 })
 $('undo').addEventListener('click', undo)
-$('save').addEventListener('click', () => save(new Blob([state.bytes]), `${stem()}-accessible.${state.name.split('.').pop()}`))
-$('report').addEventListener('click', () => save(new Blob([JSON.stringify(state.report, null, 2)], { type: 'application/json' }), `${stem()}-report.json`))
+$('save').addEventListener('click', () => save(new Blob([state.doc.bytes]), fixedName(state.doc.name)))
+$('report').addEventListener('click', () => save(json(reportOf(state.doc)), `${stem(state.doc.name)}-report.json`))
+$('save-all').addEventListener('click', saveAll)
+$('report-all').addEventListener('click', () => save(json(state.docs.filter(d => d.report).map(reportOf)), 'panocheck-report.json'))

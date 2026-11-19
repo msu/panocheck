@@ -16,6 +16,14 @@ The site has no framework, no TypeScript and no build. `src/web/site` is what th
 
 The CSP in `index.html` has `connect-src 'none'`, so the page cannot send a file anywhere. The landing page states this. HTML previews use an iframe with an empty `sandbox`, so document scripts do not run.
 
+## Many Files
+
+- The user can choose or drop many files. The app scans them one at a time in the worker.
+- One file opens in the workspace at once. Many files give a summary table, and a click on a row opens that file.
+- A file keeps its bytes only while it is open or has fixes. The other files keep their `File` handle, and the app reads them again on demand. This keeps memory low for many large PDFs.
+- "Download fixed copies (zip)" holds only the files with fixes. "Download all reports" gives one JSON list in the shape that `panocheck score` reads.
+- Each fix needs a value from the user, so there is no fix for all files at once.
+
 ## Parser Choices
 
 - Workers have no `DOMParser`, so XML uses `@xmldom/xmldom` and HTML uses `parse5`.
